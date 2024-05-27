@@ -33,7 +33,7 @@ $all_payments=json_encode($all_payments, JSON_PRETTY_PRINT);
   </head>
   <body>
     <div class="container">
-      <button class='btn btn-dark my-3 float-end' type='submit' data-bs-toggle='modal' data-bs-target='#add-modal'>+ Agregar</button>
+      <button class='btn btn-dark my-3 float-end' type='submit' data-bs-toggle='modal' data-bs-target='#add-modal'>+ Agregar cuenta</button>
       <div class="row w-100">
     <?php
     if(count($all_data)>0){
@@ -82,34 +82,41 @@ $all_payments=json_encode($all_payments, JSON_PRETTY_PRINT);
                     </thead>
                     <tbody>
                       <?php 
-                      $get_history=$con->prepare("SELECT accounts.borrow_amount, payments.*
-                                                  FROM accounts
-                                                  JOIN payments
-                                                  ON accounts.account_id=payments.account_id
-                                                  WHERE accounts.account_id=:cid
-                                                  ORDER BY DATE(accounts.create_date)");
+                      $get_history=$con->prepare("SELECT * FROM payments
+                                                  WHERE account_id=:cid
+                                                  ORDER BY DATE(payment_date)");
                       $get_history->execute([':cid'=>$id]);
                       $history=array();
                       while($history_row=$get_history->fetch(PDO::FETCH_ASSOC)){$history[]=$history_row;}
                       if(count($history)>0){
                         $last_amount=$borrow;
+                        $last_date=date('Y-m-d',strtotime($create_date));
                         foreach($history as $element){
-                          $date_gap=(intval(date('d',strtotime($element['payment_date'])))-intval(date('d', strtotime($create_date))));
                           $payment_id=$element['payment_id'];
                           $payment_amount=$element['amount'];
-                          $payment_date=date('d-m-Y',strtotime($element['payment_date']));
+                          $payment_date=date('Y-m-d',strtotime($element['payment_date']));
 
-                          // echo "date gap: " . $date_gap . "<br>";
+                          $date_gap=null;
+                          $payment_date=date_create($payment_date);
+                          is_a($last_date, 'DateTime') ? $last_date=$last_date : $last_date=date_create($last_date);
+                          is_a($date_gap, 'DateTime') ? $date_gap=$date_gap : $date_gap=date_diff($last_date,$payment_date); 
+                          $date_gap=$date_gap->format("%R%a");
+                          
+
+                          $interests_period=floor($date_gap/30);
+                          $interests_period >= 1 ? $interest_percent=0.05*$interests_period : $interest_percent=0;
+                          //echo "date gap: " . $date_gap . "<br>";
                           ?>
                           <tr>
-                            <th scope="row"><?=$payment_id?></th>
-                            <td><?=$payment_date?></td>
-                            <td><?= $last_amount ?></td>
-                            <td><?= $interests = round($last_amount*(0.6/365),2) ?></td>
-                            <td><?= $payment_amount ?></td>
-                            <td><?=$last_amount-=round($payment_amount+$interests,2)?></td>
+                            <th scope="row"><?= $payment_id ?></th>
+                            <td><?= $payment_date->format('d-m-Y') ?></td>
+                            <td>$<?= round($last_amount,2) ?></td>
+                            <td>$<?= round($interests=round($last_amount*$interest_percent),2) ?></td>
+                            <td>$<?= round($payment_amount,2) ?></td>
+                            <td>$<?= ($last_amount-=round($payment_amount,2))+$interests ?></td>
                           </tr>
                           <?php
+                          $last_date=date_create(date('Y-m-d',strtotime($element['payment_date'])));
                         }
                       }
                       ?>
@@ -121,6 +128,39 @@ $all_payments=json_encode($all_payments, JSON_PRETTY_PRINT);
             </div>
           </div>
         </div>
+
+        <!----------------------------------------- Add payment modal ------------------------------------------>
+        <div class='modal fade' id='add-payment-<?=$id?>' tabindex='-1' aria-labelledby='modal-label' aria-hidden='true'>
+          <div class='modal-dialog modal-dialog-centered'>
+            <div class='modal-content'>
+              <div class='modal-header bg-dark'>
+                <h1 class='modal-title fs-5 text-white' id='modal-label'>Agregar pago a cuenta: <span class='text-info'><?=$account_name?></span></h1>
+              </div>
+              <div class='modal-body'>
+                <div class='container-fluid justify-content-center form-signin'>
+                  <!--------------------------Add Form -------------------------->
+                  <form id='payment-add-<?=$id?>' class='row g-3' role='form' name='user-add' action='actions/create/crear_usuario.php' method='post'>
+
+        
+                      <div class="input-group mb-3">
+                        <span class="input-group-text">$</span>
+                        <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
+                        <span class="input-group-text">.00</span>
+                      </div>
+                    
+                  </form>
+                  <!--------------------------Add Form -------------------------->
+                </div>
+              </div>
+
+              <div class='modal-footer bg-dark'>
+                <button type='submit' form='payment-add-<?=$id?>' class='btn btn-info'>Agregar pago</button>
+                <button type='button' class='btn btn-secondary' data-bs-dismiss='modal'>Cerrar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!----------------------------------------- Add payment modal ------------------------------------------>
         <?php
       }
     }   
@@ -144,12 +184,12 @@ $all_payments=json_encode($all_payments, JSON_PRETTY_PRINT);
     <div class='modal-dialog modal-dialog-centered'>
       <div class='modal-content'>
         <div class='modal-header bg-dark'>
-          <h1 class='modal-title fs-5 text-white' id='modal-label'>Agregar cuenta</h1>
+          <h1 class='modal-title fs-5 text-white' id='modal-label'>Agregar cuenta por cobrar</h1>
         </div>
         <div class='modal-body'>
           <div class='container-fluid justify-content-center form-signin'>
       <!--------------------------Add Form -------------------------->
-            <form id='user-add' class='row g-3' role='form' name='user-add' action='actions/create/crear_usuario.php' method='post'>
+            <form id='account-add' class='row g-3' role='form' name='account-add' action='' method='post'>
 
   
                 <div class='form-floating'>
@@ -161,10 +201,12 @@ $all_payments=json_encode($all_payments, JSON_PRETTY_PRINT);
                   <label for='lastname'>Acreedor</label>
                 </div>
 
-              <div class='form-floating'>
-                <input type='number' name='balance' id='balance' class='form-control' placeholder='Numero de telefono' aria-describedby='phone-label'>
-                <label for='balance'>Monto solicitado</label>
+              <div class="input-group mb-3">
+                <span class="input-group-text">$</span>
+                <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
+                <span class="input-group-text">.00</span>
               </div>
+              
               <div class='form-floating'>
                 <input class='form-control' type='date' name='dob' id='dob' placeholder='Fecha de nacimiento'>
                 <label for='dob'>Fecha de inicio</label>
@@ -176,7 +218,7 @@ $all_payments=json_encode($all_payments, JSON_PRETTY_PRINT);
         </div>
 
         <div class='modal-footer bg-dark'>
-          <button type='submit' form='user-add' name='form-add-submit' class='btn btn-info'>Agregar</button>
+          <button type='submit' form='account-add' name='form-add-submit' class='btn btn-info'>Agregar cuenta</button>
           <button type='button' class='btn btn-secondary' data-bs-dismiss='modal'>Cerrar</button>
         </div>
       </div>

@@ -27,3 +27,4 @@ insert into accounts(account_name,borrow_amount,owner,create_date,active) values
 
 insert into payments(amount,payment_date,account_id) values(160.25,'0000-00-00 00:00:00',1);
 insert into payments(amount,payment_date,account_id) values(50.25,'0000-00-00 00:00:00',1);
+insert into payments(amount,payment_date,account_id) values(50,'0000-00-00 00:00:00',1);
