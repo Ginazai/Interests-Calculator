@@ -6,12 +6,14 @@ create table accounts(
 	borrow_amount float not null,
 	owner varchar(100) not null,
 	create_date datetime not null,
+	cycle int not null,
+	rate float not null,
 	active boolean not null DEFAULT 1
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 create table payments(
 	payment_id int auto_increment primary key not null,
 	amount float not null,
-	payment_date datetime not null,
+	payment_date date not null,
 	account_id int not null,
 
 	constraint fk_account_id_payment

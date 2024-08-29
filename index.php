@@ -29,45 +29,53 @@ $all_payments=json_encode($all_payments, JSON_PRETTY_PRINT);
     rel="stylesheet" 
     integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" 
     crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <?= isset($all_payments) ? "<script type='text/javascript'>var all_payments=$all_payments;</script" : "" ?>
   </head>
   <body>
+    <header><?php require_once "html/navbar.php" ?></header>
+    <main class="my-5">
     <div class="container">
-      <button class='btn btn-dark my-3 float-end' type='submit' data-bs-toggle='modal' data-bs-target='#add-modal'>+ Agregar cuenta</button>
-      <div class="row w-100">
+      <div class="row w-100 mx-auto">
     <?php
     if(count($all_data)>0){
       foreach($all_data as $account){
+        $new_balance=0.00;
         $id=$account['account_id'];
         $account_name=$account['account_name'];
         $borrow=$account['borrow_amount'];
         $owner=$account['owner'];
         $create_date=date('d-m-Y',strtotime($account['create_date']));
         $active=$account['active'];
+        $cycle=$account['cycle'];
+        $interests_rate=$account['rate'];
         ?>
         <div class="my-2">
-          <div class="accordion" id="data-accordion-<?= $id ?>">
+          <div class="accordion shadow-lg" id="data-accordion-<?= $id ?>">
             <div class="accordion-item">
               <h2 class="accordion-header">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-<?= $id ?>" aria-expanded="false" aria-controls="collapse-<?= $id ?>">
                   <div class="d-flex justify-content-between w-100">
                     <div class="row">
-                      <h3><?= $account_name ?></h3>
+                      <h3 class="my-0"><?= $account_name ?></h3>
                       <p><?= $owner ?></p>
+                      <div class="col-12 m-0"><p>Inicio: <?= $create_date ?></p></div>
                     </div>
                     <div class="ms-auto me-3 h-100 my-auto">
                       <div>
-                        <div class="col-12"><p class="float-end my-0">$<?= $borrow ?></p></div>
-                        <div class="col-12"><p class="float-end my-0" ><?= $create_date ?></p></div>
-                        <div class="col-12"><b><p class="float-end my-0"><?=$active==1?"active":"inactive"?></p></b></div>
+                        <div class="col-12"><p class="float-end my-0">$<?= $borrow ?> (al <b><?=$interests_rate*100?>%</b> de intereses <?=$cycle==15?"quincenal":"mensual"?>)</p></div>
+                        <div class="col-12">
+                          <p class="float-end my-0"><b><?=$active==1?"activa":"inactiva"?></b></p>
+                        </div>
                       </div>
-                    </div>                
+                    </div>             
                   </div>
                 </button>
               </h2>
               <div id="collapse-<?= $id ?>" class="accordion-collapse collapse" data-bs-parent="#data-accordion-<?= $id ?>">
                 <div class="accordion-body">
-                  <button class='btn btn-dark btn-sm' type='submit' data-bs-toggle='modal' data-bs-target='#add-payment-<?=$id?>'>+ Agregar pago</button> 
+                  <button class='btn btn-dark btn-sm m-1' type='submit' data-bs-toggle='modal' data-bs-target='#add-payment-<?=$id?>'><i class="fa fa-plus-square" style="font-size:18px"></i> Agregar pago</button></br>
+                  <button class='btn btn-secondary btn-sm m-1' type='submit' data-bs-toggle='modal' data-bs-target='#confirm-delete-account-<?=$id?>'><i class="fa fa-trash" style="font-size:18px"></i> Eliminar cuenta</button>   
 
                   <table class="table table-striped">
                     <thead>
@@ -78,6 +86,7 @@ $all_payments=json_encode($all_payments, JSON_PRETTY_PRINT);
                         <th scope="col">Intereses</th>
                         <th scope="col">Pago</th>
                         <th scope="col">Nuevo Balance</th>
+                        <th scope="col">Accion</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -103,9 +112,10 @@ $all_payments=json_encode($all_payments, JSON_PRETTY_PRINT);
                           $date_gap=$date_gap->format("%R%a");
                           
 
-                          $interests_period=floor($date_gap/30);
-                          $interests_period >= 1 ? $interest_percent=0.05*$interests_period : $interest_percent=0;
-                          //echo "date gap: " . $date_gap . "<br>";
+                          $interests_period=floor($date_gap/$cycle);
+                          $interests_period >= 1 ? $interest_percent=$interests_rate*$interests_period : $interest_percent=0;
+                          // echo "<br>date gap: " . $date_gap . "<br>";
+
                           ?>
                           <tr>
                             <th scope="row"><?= $payment_id ?></th>
@@ -113,7 +123,8 @@ $all_payments=json_encode($all_payments, JSON_PRETTY_PRINT);
                             <td>$<?= round($last_amount,2) ?></td>
                             <td>$<?= round($interests=round($last_amount*$interest_percent),2) ?></td>
                             <td>$<?= round($payment_amount,2) ?></td>
-                            <td>$<?= ($last_amount-=round($payment_amount,2))+$interests ?></td>
+                            <td>$<?= $new_balance=($last_amount-=round($payment_amount,2))+$interests ?></td>
+                            <td><a class='btn btn-secondary btn-sm' href="php/actions/delete_payment.php?id=<?=$payment_id?>"><i class="fa fa-trash" style="font-size:18px"></i></a></td>
                           </tr>
                           <?php
                           $last_date=date_create(date('Y-m-d',strtotime($element['payment_date'])));
@@ -139,14 +150,20 @@ $all_payments=json_encode($all_payments, JSON_PRETTY_PRINT);
               <div class='modal-body'>
                 <div class='container-fluid justify-content-center form-signin'>
                   <!--------------------------Add Form -------------------------->
-                  <form id='payment-add-<?=$id?>' class='row g-3' role='form' name='user-add' action='actions/create/crear_usuario.php' method='post'>
+                  <form id='payment-add-<?=$id?>' class='row g-3' role='form' name='payment-add-<?=$id?>' action='php/actions/add_payment.php?id=<?=$id?>' method='post'>
 
         
                       <div class="input-group mb-3">
                         <span class="input-group-text">$</span>
-                        <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
-                        <span class="input-group-text">.00</span>
+                        <input id="payment_amount" type="text" class="form-control" aria-label="Amount (to the nearest dollar)" name="payment_amount">
                       </div>
+
+                      <div class='form-floating'>
+                        <input class='form-control' type='date' name='payment_date' id='payment_date' placeholder='Fecha del pago'>
+                        <label for='payment_date'>Fecha del pago</label>
+                      </div>
+
+                      <input class='form-control visually-hidden' type='text' name='new_balance' id='new_balance' value="<?=$new_balance?>" readonly>        
                     
                   </form>
                   <!--------------------------Add Form -------------------------->
@@ -161,12 +178,34 @@ $all_payments=json_encode($all_payments, JSON_PRETTY_PRINT);
           </div>
         </div>
         <!----------------------------------------- Add payment modal ------------------------------------------>
+        <!-------------------------------------- Confirm delete account modal-------------------------------------->
+        <div class='modal fade' id='confirm-delete-account-<?=$id?>' tabindex='-1' aria-labelledby='modal-label' aria-hidden='true'>
+          <div class='modal-dialog modal-dialog-centered'>
+            <div class='modal-content'>
+              <div class='modal-header bg-dark my-0'>
+                <h1 class='modal-title fs-5 text-white' id='modal-label'>Seguro que quieres borrar la cuenta <span class='text-info'><?=$account_name?></span>? (esta accion no es reversible)</h1>
+              </div>
+              <div class='modal-body p-0'>
+                <div class='container-fluid my-0 justify-content-center form-signin'>
+                  <form id='delete-account-<?=$id?>' class='row g-3' role='form' name='delete-account-<?=$id?>' action='php/actions/delete_account.php?id=<?=$id?>' method='post'></form>
+                </div>
+              </div>
+
+              <div class='modal-footer bg-dark my-0'>
+                <button type='submit' form='delete-account-<?=$id?>' class='btn btn-info'>Confirmar</button>
+                <button type='button' class='btn btn-secondary' data-bs-dismiss='modal'>Cancelar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-------------------------------------- Confirm delete account modal-------------------------------------->
         <?php
       }
     }   
     ?>
       </div>
     </div>
+  </main>
   <script 
   src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" 
   integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" 
@@ -178,52 +217,5 @@ $all_payments=json_encode($all_payments, JSON_PRETTY_PRINT);
   <!-- my resources -->
   <link rel="stylesheet" type="text/css" href="css/stylesheet.css">
   <script type="text/javascript" src="js/script.js"></script>
-
-  <!---------------------------------------------- Add modal ---------------------------------------------->
-  <div class='modal fade' id='add-modal' tabindex='-1' aria-labelledby='modal-label' aria-hidden='true'>
-    <div class='modal-dialog modal-dialog-centered'>
-      <div class='modal-content'>
-        <div class='modal-header bg-dark'>
-          <h1 class='modal-title fs-5 text-white' id='modal-label'>Agregar cuenta por cobrar</h1>
-        </div>
-        <div class='modal-body'>
-          <div class='container-fluid justify-content-center form-signin'>
-      <!--------------------------Add Form -------------------------->
-            <form id='account-add' class='row g-3' role='form' name='account-add' action='' method='post'>
-
-  
-                <div class='form-floating'>
-                  <input type='text' name='name' id='name' class='form-control' placeholder='Nombre'>
-                  <label for='name'>Nombre de la cuenta</label>
-                </div>
-                <div class='form-floating'>
-                  <input type='text' name='lastname' id='lastname' class='form-control' placeholder='Apellido'>
-                  <label for='lastname'>Acreedor</label>
-                </div>
-
-              <div class="input-group mb-3">
-                <span class="input-group-text">$</span>
-                <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
-                <span class="input-group-text">.00</span>
-              </div>
-              
-              <div class='form-floating'>
-                <input class='form-control' type='date' name='dob' id='dob' placeholder='Fecha de nacimiento'>
-                <label for='dob'>Fecha de inicio</label>
-              </div>
-              
-            </form>
-  <!--------------------------Add Form -------------------------->
-          </div>
-        </div>
-
-        <div class='modal-footer bg-dark'>
-          <button type='submit' form='account-add' name='form-add-submit' class='btn btn-info'>Agregar cuenta</button>
-          <button type='button' class='btn btn-secondary' data-bs-dismiss='modal'>Cerrar</button>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!--------------------------Add modal -------------------------->
   </body>
 </html>
