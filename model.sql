@@ -4,6 +4,7 @@ create table accounts(
 	account_id int auto_increment primary key not null,
 	account_name varchar(100) not null,
 	borrow_amount float not null,
+	current_balance float not null default borrow_amount,
 	owner varchar(100) not null,
 	create_date datetime not null,
 	cycle int not null,
@@ -13,6 +14,7 @@ create table accounts(
 create table payments(
 	payment_id int auto_increment primary key not null,
 	amount float not null,
+	balance_at_payment float not null,
 	payment_date date not null,
 	account_id int not null,
 

@@ -116,14 +116,19 @@ $all_payments=json_encode($all_payments, JSON_PRETTY_PRINT);
                           $interests_period >= 1 ? $interest_percent=$interests_rate*$interests_period : $interest_percent=0;
                           // echo "<br>date gap: " . $date_gap . "<br>";
 
+                          $interests=round($last_amount*$interest_percent);
+                          $previous_balance=$last_amount;
+                          $last_amount-=round($payment_amount,2);
+                          $new_balance=$last_amount+$interests;
+                          $last_amount=$new_balance;
                           ?>
                           <tr>
                             <th scope="row"><?= $payment_id ?></th>
                             <td><?= $payment_date->format('d-m-Y') ?></td>
-                            <td>$<?= round($last_amount,2) ?></td>
-                            <td>$<?= round($interests=round($last_amount*$interest_percent),2) ?></td>
+                            <td>$<?= round($previous_balance,2) ?></td>
+                            <td>$<?= $interests ?></td>
                             <td>$<?= round($payment_amount,2) ?></td>
-                            <td>$<?= $new_balance=($last_amount-=round($payment_amount,2))+$interests ?></td>
+                            <td>$<?= $new_balance ?></td>
                             <td><a class='btn btn-secondary btn-sm' href="php/actions/delete_payment.php?id=<?=$payment_id?>"><i class="fa fa-trash" style="font-size:18px"></i></a></td>
                           </tr>
                           <?php
@@ -163,7 +168,7 @@ $all_payments=json_encode($all_payments, JSON_PRETTY_PRINT);
                         <label for='payment_date'>Fecha del pago</label>
                       </div>
 
-                      <input class='form-control visually-hidden' type='text' name='new_balance' id='new_balance' value="<?=$new_balance?>" readonly>        
+                      <input class='form-control' type='text' name='previous_balance' id='previous_balance' value="<?=$new_balance?>" readonly>        
                     
                   </form>
                   <!--------------------------Add Form -------------------------->

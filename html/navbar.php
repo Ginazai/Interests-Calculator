@@ -18,33 +18,33 @@
 
 
               <div class='form-floating my-3'>
-                <input type='text' name='name' id='name' class='form-control' placeholder='Nombre'>
-                <label for='name'>Nombre de la cuenta</label>
+                <input type='text' name='accout_name' id='accout_name' class='form-control' placeholder='Nombre'>
+                <label for='accout_name'>Nombre de la cuenta</label>
               </div>
               <div class='form-floating my-0 mb-3'>
                 <input type='text' name='lastname' id='lastname' class='form-control' placeholder='Apellido'>
-                <label for='lastname'>Acreedor</label>
+                <label for='lastname'>Deudor</label>
               </div>
 
             <div class="my-0 mb-3">  
-              <label for="amount" class="form-label">Cantidad solicitada</label>
+              <label for="amount_borrowed" class="form-label">Cantidad solicitada</label>
               <div class="input-group">
                 <span class="input-group-text">$</span>
-                <input id="amount" name="amount" type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
+                <input id="amount_borrowed" name="amount_borrowed" type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
               </div>
             </div>
 
             <div class="my-0 mb-3">  
               <label for="interest_rate" class="form-label">Tasa de interes</label>
               <div class="input-group">
-                <input id="interest_rate" name="interest_rate" type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
+                <input id="interest_rate" name="interest_rate" type="text" class="form-control" aria-label="Interest Rate">
                 <span class="input-group-text">%</span>
               </div>
             </div>
 
             <div class="input-group mb-3">
-              <label class="input-group-text" for="ciclo">Ciclo</label>
-              <select class="form-select" id="ciclo">
+              <label class="input-group-text" for="cycle">Ciclo</label>
+              <select class="form-select" id="cycle" name="cycle">
                 <option selected>Seleccione...</option>
                 <option value="15">Quincenal</option>
                 <option value="30">Mensual</option>
@@ -52,8 +52,8 @@
             </div>
 
             <div class='form-floating my-0 mb-3'>
-              <input class='form-control' type='date' name='dob' id='dob' placeholder='Fecha de nacimiento'>
-              <label for='dob'>Fecha de inicio</label>
+              <input class='form-control' type='date' name='start_date' id='start_date' placeholder='Fecha de inicio'>
+              <label for='start_date'>Fecha de inicio</label>
             </div>
             
           </form>
