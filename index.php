@@ -49,6 +49,8 @@ $all_payments=json_encode($all_payments, JSON_PRETTY_PRINT);
         $active=$account['active'];
         $cycle=$account['cycle'];
         $interests_rate=$account['rate'];
+
+        $show_date=date('d/m/Y',strtotime($account['create_date']));
         ?>
         <div class="my-2">
           <div class="accordion shadow-lg" id="data-accordion-<?= $id ?>">
@@ -59,7 +61,7 @@ $all_payments=json_encode($all_payments, JSON_PRETTY_PRINT);
                     <div class="row">
                       <h3 class="my-0"><?= $account_name ?></h3>
                       <p><?= $owner ?></p>
-                      <div class="col-12 m-0"><p>Inicio: <?= $create_date ?></p></div>
+                      <div class="col-12 m-0"><p>Inicio: <?= $show_date ?></p></div>
                     </div>
                     <div class="ms-auto me-3 h-100 my-auto">
                       <div>
@@ -116,7 +118,7 @@ $all_payments=json_encode($all_payments, JSON_PRETTY_PRINT);
                           $interests_period >= 1 ? $interest_percent=$interests_rate*$interests_period : $interest_percent=0;
                           // echo "<br>date gap: " . $date_gap . "<br>";
 
-                          $interests=round($last_amount*$interest_percent);
+                          $interests=round($last_amount*$interest_percent,2);
                           $previous_balance=$last_amount;
                           $last_amount-=round($payment_amount,2);
                           $new_balance=$last_amount+$interests;
@@ -124,12 +126,12 @@ $all_payments=json_encode($all_payments, JSON_PRETTY_PRINT);
                           ?>
                           <tr>
                             <th scope="row"><?= $payment_id ?></th>
-                            <td><?= $payment_date->format('d-m-Y') ?></td>
+                            <td><?= $payment_date->format('d/m/Y') ?></td>
                             <td>$<?= round($previous_balance,2) ?></td>
                             <td>$<?= $interests ?></td>
                             <td>$<?= round($payment_amount,2) ?></td>
                             <td>$<?= $new_balance ?></td>
-                            <td><a class='btn btn-secondary btn-sm' href="php/actions/delete_payment.php?id=<?=$payment_id?>"><i class="fa fa-trash" style="font-size:18px"></i></a></td>
+                            <td><button class='btn btn-secondary btn-sm' type='submit' data-bs-toggle='modal' data-bs-target='#confirm-delete-payment-<?=$payment_id?>'><i class="fa fa-trash" style="font-size:18px"></i> Eliminar pago</button>   </td>
                           </tr>
                           <?php
                           $last_date=date_create(date('Y-m-d',strtotime($element['payment_date'])));
@@ -150,7 +152,7 @@ $all_payments=json_encode($all_payments, JSON_PRETTY_PRINT);
           <div class='modal-dialog modal-dialog-centered'>
             <div class='modal-content'>
               <div class='modal-header bg-dark'>
-                <h1 class='modal-title fs-5 text-white' id='modal-label'>Agregar pago a cuenta: <span class='text-info'><?=$account_name?></span></h1>
+                <h1 class='modal-title fs-5 text-white' id='modal-label'>Agregar pago a cuenta: <span class='text-success'><?=$account_name?></span></h1>
               </div>
               <div class='modal-body'>
                 <div class='container-fluid justify-content-center form-signin'>
@@ -168,7 +170,7 @@ $all_payments=json_encode($all_payments, JSON_PRETTY_PRINT);
                         <label for='payment_date'>Fecha del pago</label>
                       </div>
 
-                      <input class='form-control' type='text' name='previous_balance' id='previous_balance' value="<?=$new_balance?>" readonly>        
+                      <input class='form-control visually-hidden' type='text' name='previous_balance' id='previous_balance' value="<?=$new_balance?>" readonly>        
                     
                   </form>
                   <!--------------------------Add Form -------------------------->
@@ -176,7 +178,7 @@ $all_payments=json_encode($all_payments, JSON_PRETTY_PRINT);
               </div>
 
               <div class='modal-footer bg-dark'>
-                <button type='submit' form='payment-add-<?=$id?>' class='btn btn-info'>Agregar pago</button>
+                <button type='submit' form='payment-add-<?=$id?>' class='btn btn-success'>Agregar pago</button>
                 <button type='button' class='btn btn-secondary' data-bs-dismiss='modal'>Cerrar</button>
               </div>
             </div>
@@ -188,7 +190,7 @@ $all_payments=json_encode($all_payments, JSON_PRETTY_PRINT);
           <div class='modal-dialog modal-dialog-centered'>
             <div class='modal-content'>
               <div class='modal-header bg-dark my-0'>
-                <h1 class='modal-title fs-5 text-white' id='modal-label'>Seguro que quieres borrar la cuenta <span class='text-info'><?=$account_name?></span>? (esta accion no es reversible)</h1>
+                <h1 class='modal-title fs-5 text-white' id='modal-label'>Seguro que quieres borrar la cuenta <span class='text-success'><?=$account_name?></span>? (esta accion no es reversible)</h1>
               </div>
               <div class='modal-body p-0'>
                 <div class='container-fluid my-0 justify-content-center form-signin'>
@@ -197,7 +199,7 @@ $all_payments=json_encode($all_payments, JSON_PRETTY_PRINT);
               </div>
 
               <div class='modal-footer bg-dark my-0'>
-                <button type='submit' form='delete-account-<?=$id?>' class='btn btn-info'>Confirmar</button>
+                <button type='submit' form='delete-account-<?=$id?>' class='btn btn-success'>Confirmar</button>
                 <button type='button' class='btn btn-secondary' data-bs-dismiss='modal'>Cancelar</button>
               </div>
             </div>
@@ -211,6 +213,34 @@ $all_payments=json_encode($all_payments, JSON_PRETTY_PRINT);
       </div>
     </div>
   </main>
+  <div id="payments-modals"></div>
+  <script type="application/javascript"> 
+    all_payments.map((payment)=>{
+      var payment_id=payment.payment_id;
+      var amount=payment.amount;
+
+      var content=`<div class="modal fade" id="confirm-delete-payment-${payment_id}" tabindex="-1" aria-labelledby="modal-label" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header bg-dark my-0">
+              <h1 class="modal-title fs-5 text-white" id="modal-label">Seguro que quieres borrar el pago de <span class="text-success">${amount}</span>? (esta accion no es reversible)</h1>
+            </div>
+            <div class="modal-body p-0">
+              <div class="container-fluid my-0 justify-content-center form-signin">
+                <form id="delete-payment-${payment_id}" class="row g-3" role="form" name="delete-payment-${payment_id}"" action="php/actions/delete_payment.php?id=${payment_id}"" method="post"></form>
+              </div>
+            </div>
+      
+            <div class="modal-footer bg-dark my-0">
+              <button type="submit" form="delete-payment-${payment_id}"" class="btn btn-success">Confirmar</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+          </div>
+        </div>
+      </div>`;
+      $('#payments-modals').append(content);
+    });
+  </script>
   <script 
   src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" 
   integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" 
@@ -220,7 +250,7 @@ $all_payments=json_encode($all_payments, JSON_PRETTY_PRINT);
   integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" 
   crossorigin="anonymous"></script>
   <!-- my resources -->
-  <link rel="stylesheet" type="text/css" href="css/stylesheet.css">
-  <script type="text/javascript" src="js/script.js"></script>
+  <link rel="stylesheet" type="text/css" href="assets/css/stylesheet.css">
+  <script type="text/javascript" src="assets/js/script.js"></script>
   </body>
 </html>

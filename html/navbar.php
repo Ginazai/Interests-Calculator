@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg bg-dark shadow-lg" data-bs-theme="dark">
-  <div class="container-fluid">
-    <a class="navbar-brand" href="#">Calculadora</a>
+  <div class="container-fluid px-5">
+    <a class="navbar-brand" href="#">Calculadora de intereses</a>
     <button class='btn btn-secondary my-3 float-end' type='submit' data-bs-toggle='modal' data-bs-target='#add-modal'>+ Agregar cuenta</button>
   </div>
 </nav>
@@ -14,7 +14,7 @@
       <div class='modal-body'>
         <div class='container-fluid justify-content-center form-signin'>
     <!--------------------------Add Form -------------------------->
-          <form id='account-add' class='row g-3' role='form' name='account-add' action='' method='post'>
+          <form id='account-add' class='row g-3' role='form' name='account-add' action='php/actions/add_account.php' method='post'>
 
 
               <div class='form-floating my-3'>
@@ -22,8 +22,8 @@
                 <label for='accout_name'>Nombre de la cuenta</label>
               </div>
               <div class='form-floating my-0 mb-3'>
-                <input type='text' name='lastname' id='lastname' class='form-control' placeholder='Apellido'>
-                <label for='lastname'>Deudor</label>
+                <input type='text' name='borrower' id='borrower' class='form-control' placeholder='Apellido'>
+                <label for='borrower'>Deudor</label>
               </div>
 
             <div class="my-0 mb-3">  
@@ -62,7 +62,7 @@
       </div>
 
       <div class='modal-footer bg-dark'>
-        <button type='submit' form='account-add' name='form-add-submit' class='btn btn-info'>Agregar cuenta</button>
+        <button type='submit' form='account-add' class='btn btn-success'>Agregar cuenta</button>
         <button type='button' class='btn btn-secondary' data-bs-dismiss='modal'>Cerrar</button>
       </div>
     </div>
