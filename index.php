@@ -77,8 +77,8 @@ $all_payments=json_encode($all_payments, JSON_PRETTY_PRINT);
               <div id="collapse-<?= $id ?>" class="accordion-collapse collapse" data-bs-parent="#data-accordion-<?= $id ?>">
                 <div class="accordion-body">
                   <a class='btn btn-secondary btn-sm m-1 float-end' href='php/actions/create_csv.php?id=<?=$id?>' type='submit'><i class="fa fa-download" style="font-size:18px"></i> Descargar CSV</a>     
-                  <button class='btn btn-dark btn-sm m-1' type='submit' data-bs-toggle='modal' data-bs-target='#add-payment-<?=$id?>'><i class="fa fa-plus-square" style="font-size:18px"></i> Agregar pago</button></br>
-                  <button class='btn btn-secondary btn-sm m-1' type='submit' data-bs-toggle='modal' data-bs-target='#confirm-delete-account-<?=$id?>'><i class="fa fa-trash" style="font-size:18px"></i> Eliminar cuenta</button>  
+                  <button class='btn btn-success btn-sm m-1' type='submit' data-bs-toggle='modal' data-bs-target='#add-payment-<?=$id?>'><i class="fa fa-money" style="font-size:18px"></i> Agregar pago</button></br>
+                  <button class='btn btn-secondary btn-sm m-1' type='submit' data-bs-toggle='modal' data-bs-target='#confirm-delete-account-<?=$id?>'><i class="fa fa-minus-square" style="font-size:18px"></i> Eliminar cuenta</button>  
 
                   <table class="table table-striped">
                     <thead>
@@ -132,7 +132,7 @@ $all_payments=json_encode($all_payments, JSON_PRETTY_PRINT);
                             <td>$<?= $interests ?></td>
                             <td>$<?= round($payment_amount,2) ?></td>
                             <td>$<?= $new_balance ?></td>
-                            <td><button class='btn btn-secondary btn-sm' type='submit' data-bs-toggle='modal' data-bs-target='#confirm-delete-payment-<?=$payment_id?>'><i class="fa fa-trash" style="font-size:18px"></i> Eliminar pago</button>   </td>
+                            <td><button class='btn btn-secondary btn-sm' type='submit' data-bs-toggle='modal' data-bs-target='#confirm-delete-payment-<?=$payment_id?>'><i class="fa fa-trash" style="font-size:18px"></i> Eliminar</button>   </td>
                           </tr>
                           <?php
                           $last_date=date_create(date('Y-m-d',strtotime($element['payment_date'])));

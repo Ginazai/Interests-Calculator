@@ -1,7 +1,10 @@
-<nav class="navbar navbar-expand-lg bg-dark shadow-lg" data-bs-theme="dark">
-  <div class="container-fluid px-5">
-    <a class="navbar-brand" href="#">Calculadora de intereses</a>
-    <button class='btn btn-secondary my-3 float-end' type='submit' data-bs-toggle='modal' data-bs-target='#add-modal'>+ Agregar cuenta</button>
+<nav class="navbar navbar-expand-lg bg-dark shadow-lg px-5 py-1" data-bs-theme="dark">
+  <div class="container-fluid">
+      <a class="navbar-brand" href="#"><i class="fa fa-bar-chart" style="font-size:18px"></i> Calculadora de intereses</a>
+      <div class="btn-group float-end my-3 m-1" role="group">
+        <a class='btn btn-sm btn-secondary' href='php/actions/download_all_csv.php'><i class="fa fa-download" style="font-size:18px"></i> Descargar todo como archivo CSV</a>
+        <button class='btn btn-sm btn-success' type='submit' data-bs-toggle='modal' data-bs-target='#add-modal'><i class="fa fa-plus-square" style="font-size:18px"></i> Agregar cuenta</button> 
+      </div> 
   </div>
 </nav>
 <!---------------------------------------------- Add modal ---------------------------------------------->

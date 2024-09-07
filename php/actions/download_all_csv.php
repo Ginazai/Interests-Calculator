@@ -3,10 +3,9 @@ session_start();
 require_once '../connection.php';
 
 if(isset($_POST)){
-  $id=$_GET['id'];
 
-  $data=$con->prepare("SELECT * FROM accounts WHERE account_id=:aid");
-  $data->execute([":aid"=>$id]);
+  $data=$con->prepare("SELECT * FROM accounts");
+  $data->execute();
   $all_data=$data->fetchAll(PDO::FETCH_ASSOC);
 
   $file = fopen('php://output', 'w'); 
@@ -58,7 +57,7 @@ if(isset($_POST)){
           $new_balance=$last_amount+$interests;
           $last_amount=$new_balance;
             
-          $fname=$owner."-".$account_name." (".date('d-m-Y',strtotime(date_default_timezone_get())).").csv";
+          $fname="borrowing_data_as_of_".date('d-m-Y',strtotime(date_default_timezone_get())).".csv";
           $csv_output=array($payment_date->format('d/m/Y'),$previous_balance,$interests,$payment_amount,$new_balance);
           header('Content-Type: text/csv');
           header('Content-Disposition: attachment; filename="'.$fname.'"');
