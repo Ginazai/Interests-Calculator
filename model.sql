@@ -13,8 +13,8 @@ create table accounts(
 create table payments(
 	payment_id int auto_increment primary key not null,
 	amount float not null,
-	balance_at_payment float not null,
-	payment_date date not null,
+	interests_from_payment float not null default 0.00,
+	create_date date not null,
 	account_id int not null,
 
 	constraint fk_account_id_payment

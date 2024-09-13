@@ -1,6 +1,23 @@
 <?php
 require_once 'php/connection.php';
 
+require_once 'php/actions/function_payment_history.php';
+$all_payment_history=get_payment_history();
+foreach($all_payment_history as $all_ac){
+  $all_pmts=$all_ac['payments'];
+  foreach($all_pmts as $pmt){
+    $pid=$pmt['payment_id'];
+    $interests=$pmt['interests'];
+    if($interests!=0.00){
+      $insert_interests=$con->prepare("UPDATE payments SET interests_from_payment=:iap WHERE payment_id=:pid");
+      $insert_interests->execute([
+        ":iap"=>$interests,
+        ":pid"=>$pid
+      ]);
+    }
+  }
+}
+
 $data=$con->prepare("SELECT * FROM accounts");
 $data->execute();
 while($get_data=$data->fetch(PDO::FETCH_ASSOC)){$all_data[]=$get_data;}
@@ -96,7 +113,7 @@ $all_payments=json_encode($all_payments, JSON_PRETTY_PRINT);
                       <?php 
                       $get_history=$con->prepare("SELECT * FROM payments
                                                   WHERE account_id=:cid
-                                                  ORDER BY DATE(payment_date)");
+                                                  ORDER BY DATE(create_date)");
                       $get_history->execute([':cid'=>$id]);
                       $history=array();
                       while($history_row=$get_history->fetch(PDO::FETCH_ASSOC)){$history[]=$history_row;}
@@ -106,7 +123,7 @@ $all_payments=json_encode($all_payments, JSON_PRETTY_PRINT);
                         foreach($history as $element){
                           $payment_id=$element['payment_id'];
                           $payment_amount=$element['amount'];
-                          $payment_date=date('Y-m-d',strtotime($element['payment_date']));
+                          $payment_date=date('Y-m-d',strtotime($element['create_date']));
 
                           $date_gap=null;
                           $payment_date=date_create($payment_date);
@@ -135,7 +152,7 @@ $all_payments=json_encode($all_payments, JSON_PRETTY_PRINT);
                             <td><button class='btn btn-secondary btn-sm' type='submit' data-bs-toggle='modal' data-bs-target='#confirm-delete-payment-<?=$payment_id?>'><i class="fa fa-trash" style="font-size:18px"></i> Eliminar</button>   </td>
                           </tr>
                           <?php
-                          $last_date=date_create(date('Y-m-d',strtotime($element['payment_date'])));
+                          $last_date=date_create(date('Y-m-d',strtotime($element['create_date'])));
                         }
                       }
                       ?>
@@ -171,7 +188,7 @@ $all_payments=json_encode($all_payments, JSON_PRETTY_PRINT);
                         <label for='payment_date'>Fecha del pago</label>
                       </div>
 
-                      <input class='form-control visually-hidden' type='text' name='previous_balance' id='previous_balance' value="<?=$new_balance?>" readonly>        
+                      <input class='form-control' type='text' name='previous_balance' id='previous_balance' value="<?=$interests?>" readonly>        
                     
                   </form>
                   <!--------------------------Add Form -------------------------->

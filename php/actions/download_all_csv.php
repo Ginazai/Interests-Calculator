@@ -1,75 +1,54 @@
 <?php
 session_start();
 require_once '../connection.php';
-
 if(isset($_POST)){
-
-  $data=$con->prepare("SELECT * FROM accounts");
-  $data->execute();
-  $all_data=$data->fetchAll(PDO::FETCH_ASSOC);
-
+  $get_data=$con->prepare("SELECT * FROM( 
+                          SELECT account_id as id,create_date,null as interests,borrow_amount as debit,null as credit 
+                          FROM accounts 
+                          UNION 
+                          SELECT account_id,create_date,null,null,amount FROM payments
+                          UNION 
+                          SELECT account_id,create_date,interests_from_payment,null,null FROM payments) AS csv_data 
+                          ORDER BY DATE(create_date) ASC"); 
+  
+  $get_data->execute();
+  $all_data=$get_data->fetchAll(PDO::FETCH_ASSOC);
   $file = fopen('php://output', 'w'); 
-  if(count($all_data)>0){
-    foreach($all_data as $account){
-      $new_balance=0.00;
-      $id=$account['account_id'];
-      $account_name=$account['account_name'];
-      $borrow=$account['borrow_amount'];
-      $owner=$account['owner'];
-      $create_date=date('d-m-Y',strtotime($account['create_date']));
-      $active=$account['active'];
-      $cycle=$account['cycle'];
-      $interests_rate=$account['rate'];
+  $csv_header=array("Referencia","Fecha","Descripcion","Debito","Credito");
+  fputcsv($file, array_values($csv_header));    
+  if($all_data>0){
+    foreach($all_data as $element){
+      $data_type=array_keys((array)$element);
+      $fecha=date('d/m/Y',strtotime($element['create_date']));
+      $descripcion="";
+      $referencia=$element['id'];
+      $debito=$element['debit'];
+      $credito=$element['credit'];
+      $intereses=$element['interests'];
 
-      $csv_title=array($account_name);
-      fputcsv($file, array_values($csv_title));
-      $csv_header=array("Fecha del pago","Balance","Intereses","Pago","Nuevo Balance");
-      fputcsv($file, array_values($csv_header));
-
-      $show_date=date('d/m/Y',strtotime($account['create_date']));
-
-      $get_history=$con->prepare("SELECT * FROM payments
-                                  WHERE account_id=:cid
-                                  ORDER BY DATE(payment_date)");
-      $get_history->execute([':cid'=>$id]);
-      $history=$get_history->fetchAll(PDO::FETCH_ASSOC);
-      if(count($history)>0){
-        $last_amount=$borrow;
-        $last_date=date('Y-m-d',strtotime($create_date));
-        foreach($history as $element){
-          $payment_id=$element['payment_id'];
-          $payment_amount=$element['amount'];
-          $payment_date=date('Y-m-d',strtotime($element['payment_date']));
-
-          $date_gap=null;
-          $payment_date=date_create($payment_date);
-          is_a($last_date, 'DateTime') ? $last_date=$last_date : $last_date=date_create($last_date);
-          is_a($date_gap, 'DateTime') ? $date_gap=$date_gap : $date_gap=date_diff($last_date,$payment_date); 
-          $date_gap=$date_gap->format("%R%a");
-          
-
-          $interests_period=floor($date_gap/$cycle);
-          $interests_period >= 1 ? $interest_percent=$interests_rate*$interests_period : $interest_percent=0;
-
-          $interests=round($last_amount*$interest_percent,2);
-          $previous_balance=$last_amount;
-          $last_amount-=round($payment_amount,2);
-          $new_balance=$last_amount+$interests;
-          $last_amount=$new_balance;
-            
-          $fname="borrowing_data_as_of_".date('d-m-Y',strtotime(date_default_timezone_get())).".csv";
-          $csv_output=array($payment_date->format('d/m/Y'),$previous_balance,$interests,$payment_amount,$new_balance);
-          header('Content-Type: text/csv');
-          header('Content-Disposition: attachment; filename="'.$fname.'"');
-          header('Pragma: no-cache');
-          header('Expires: 0');
-          fputcsv($file, array_values($csv_output));
-
-          $last_date=date_create(date('Y-m-d',strtotime($element['payment_date'])));
-        }
+      if($debito!=NULL){
+        $descripcion="Prestamo de otorgado";
+        $credito="";
       }
+      else if($credito!=NULL) {
+        $descripcion="pago por realizado";
+        $debito="";
+      }
+      else if($intereses!=NULL&&$intereses>0){
+        $descripcion="Intereses acomulados en la cuenta";
+        $debito=$intereses;
+        $credito="";
+      } else {continue;}
+      
+      $csv_output=array($referencia,$fecha,$descripcion,$debito,$credito);
+      $fname="borrowing_data_as_of_".date('d-m-Y',strtotime(date_default_timezone_get())).".csv";
+      header('Content-Type: text/csv');
+      header('Content-Disposition: attachment; filename="'.$fname.'"');
+      header('Pragma: no-cache');
+      header('Expires: 0');
+      fputcsv($file, array_values($csv_output));
     }
-  } 
+  }
   fclose($file);
 }  
 ?>
