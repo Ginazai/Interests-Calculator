@@ -4,12 +4,12 @@ require_once '../connection.php';
 if(isset($_POST)){
   $id=$_GET['id'];
   $get_data=$con->prepare("SELECT * FROM( 
-                          SELECT account_id as id,create_date,null as interests,borrow_amount as debit,null as credit 
+                          SELECT account_id as id,account_name,owner,create_date,null as interests,borrow_amount as debit,null as credit 
                           FROM accounts WHERE account_id=:id
                           UNION 
-                          SELECT account_id,create_date,null,null,amount FROM payments WHERE account_id=:id
+                          SELECT account_id,null,null,create_date,null,null,amount FROM payments WHERE account_id=:id
                           UNION 
-                          SELECT account_id,create_date,interests_from_payment,null,null FROM payments WHERE account_id=:id) AS csv_data 
+                          SELECT account_id,null,null,create_date,interests_from_payment,null,null FROM payments WHERE account_id=:id) AS csv_data 
                           ORDER BY DATE(create_date) ASC"); 
   
   $get_data->execute([":id"=>$id]);
@@ -19,7 +19,10 @@ if(isset($_POST)){
   fputcsv($file, array_values($csv_header));    
   if($all_data>0){
     foreach($all_data as $element){
-      $data_type=array_keys((array)$element);
+      $element['account_name']!=NULL? $account_name=$element['account_name'] : "";
+      $element['owner']!=NULL? $account_owner=$element['owner'] : "";
+
+
       $fecha=date('d/m/Y',strtotime($element['create_date']));
       $descripcion="";
       $referencia=$element['id'];
@@ -28,11 +31,11 @@ if(isset($_POST)){
       $intereses=$element['interests'];
 
       if($debito!=NULL){
-        $descripcion="Prestamo de otorgado";
+        $descripcion="Prestamo de $".$debito." otorgado";
         $credito="";
       }
       else if($credito!=NULL) {
-        $descripcion="pago por realizado";
+        $descripcion="pago por $".$credito." realizado";
         $debito="";
       }
       else if($intereses!=NULL&&$intereses>0){
@@ -42,7 +45,7 @@ if(isset($_POST)){
       } else {continue;}
       
       $csv_output=array($referencia,$fecha,$descripcion,$debito,$credito);
-      $fname="account_data_as_of_".date('d-m-Y',strtotime(date_default_timezone_get())).".csv";
+      $fname=date('d-m-Y',strtotime(date_default_timezone_get()))."-".$account_owner."-".$account_name.".csv";
       header('Content-Type: text/csv');
       header('Content-Disposition: attachment; filename="'.$fname.'"');
       header('Pragma: no-cache');

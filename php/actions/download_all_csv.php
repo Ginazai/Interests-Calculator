@@ -27,11 +27,11 @@ if(isset($_POST)){
       $intereses=$element['interests'];
 
       if($debito!=NULL){
-        $descripcion="Prestamo de otorgado";
+        $descripcion="Prestamo de $".$debito." otorgado";
         $credito="";
       }
       else if($credito!=NULL) {
-        $descripcion="pago por realizado";
+        $descripcion="pago por $".$credito." realizado";
         $debito="";
       }
       else if($intereses!=NULL&&$intereses>0){
