@@ -175,20 +175,26 @@ $all_payments=json_encode($all_payments, JSON_PRETTY_PRINT);
               <div class='modal-body'>
                 <div class='container-fluid justify-content-center form-signin'>
                   <!--------------------------Add Form -------------------------->
-                  <form id='payment-add-<?=$id?>' class='row g-3' role='form' name='payment-add-<?=$id?>' action='php/actions/add_payment.php?id=<?=$id?>' method='post'>
+                  <form id='payment-add-<?=$id?>' class='row g-3 needs-validation' role='form' name='payment-add-<?=$id?>' action='php/actions/add_payment.php?id=<?=$id?>' method='post' novalidate>
 
         
                       <div class="input-group mb-3">
                         <span class="input-group-text">$</span>
-                        <input id="payment_amount" type="text" class="form-control" aria-label="Amount (to the nearest dollar)" name="payment_amount">
+                        <input id="payment_amount" type="text" class="form-control" aria-label="Amount (to the nearest dollar)" name="payment_amount" required>
+                        <div class="invalid-feedback">
+                          Ingrese la cantidad del pago
+                        </div>
                       </div>
 
                       <div class='form-floating'>
-                        <input class='form-control' type='date' name='payment_date' id='payment_date' placeholder='Fecha del pago'>
+                        <input class='form-control' type='date' name='payment_date' id='payment_date' placeholder='Fecha del pago' required>
                         <label for='payment_date'>Fecha del pago</label>
+                        <div class="invalid-feedback">
+                          Ingrese la fecha del pago
+                        </div>
                       </div>
 
-                      <input class='form-control' type='text' name='previous_balance' id='previous_balance' value="<?=$interests?>" readonly>        
+                      <input class='form-control visually-hidden' type='text' name='previous_balance' id='previous_balance' value="<?=$interests?>" readonly>     
                     
                   </form>
                   <!--------------------------Add Form -------------------------->
@@ -270,5 +276,6 @@ $all_payments=json_encode($all_payments, JSON_PRETTY_PRINT);
   <!-- my resources -->
   <link rel="stylesheet" type="text/css" href="assets/css/stylesheet.css">
   <script type="text/javascript" src="assets/js/script.js"></script>
+  <script type="text/javascript" src="assets/js/validation.js"></script>
   </body>
 </html>

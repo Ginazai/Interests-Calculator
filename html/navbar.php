@@ -17,46 +17,64 @@
       <div class='modal-body'>
         <div class='container-fluid justify-content-center form-signin'>
     <!--------------------------Add Form -------------------------->
-          <form id='account-add' class='row g-3' role='form' name='account-add' action='php/actions/add_account.php' method='post'>
+          <form id='account-add' class='row g-3 needs-validation' role='form' name='account-add' action='php/actions/add_account.php' method='post' novalidate>
 
 
               <div class='form-floating my-3'>
-                <input type='text' name='accout_name' id='accout_name' class='form-control' placeholder='Nombre'>
+                <input type='text' name='accout_name' id='accout_name' class='form-control' placeholder='Nombre' required>
                 <label for='accout_name'>Nombre de la cuenta</label>
+                <div class="invalid-feedback">
+                  Porfavor, asigne un nombre a la cuenta
+                </div>
               </div>
               <div class='form-floating my-0 mb-3'>
-                <input type='text' name='borrower' id='borrower' class='form-control' placeholder='Apellido'>
+                <input type='text' name='borrower' id='borrower' class='form-control' placeholder='Deudor' required>
                 <label for='borrower'>Deudor</label>
+                <div class="invalid-feedback">
+                  Porfavor, ingrese el nombre del deudor
+                </div>
               </div>
 
             <div class="my-0 mb-3">  
               <label for="amount_borrowed" class="form-label">Cantidad solicitada</label>
               <div class="input-group">
                 <span class="input-group-text">$</span>
-                <input id="amount_borrowed" name="amount_borrowed" type="text" class="form-control" aria-label="Amount (to the nearest dollar)">
+                <input id="amount_borrowed" name="amount_borrowed" type="text" class="form-control" aria-label="Amount (to the nearest dollar)" required>
+                <div class="invalid-feedback">
+                  Ingrese la cantidad solicitada
+                </div>
               </div>
             </div>
 
             <div class="my-0 mb-3">  
               <label for="interest_rate" class="form-label">Tasa de interes</label>
               <div class="input-group">
-                <input id="interest_rate" name="interest_rate" type="text" class="form-control" aria-label="Interest Rate">
+                <input id="interest_rate" name="interest_rate" type="text" class="form-control" aria-label="Interest Rate" required>
                 <span class="input-group-text">%</span>
+                <div class="invalid-feedback">
+                  Ingrese la tasa de interes
+                </div>
               </div>
             </div>
 
             <div class="input-group mb-3">
               <label class="input-group-text" for="cycle">Ciclo</label>
-              <select class="form-select" id="cycle" name="cycle">
-                <option selected>Seleccione...</option>
+              <select class="form-select" id="cycle" name="cycle" required>
+                <option selected disabled value="">Seleccione...</option>
                 <option value="15">Quincenal</option>
                 <option value="30">Mensual</option>
               </select>
+              <div class="invalid-feedback">
+                  Ingrese el ciclo
+              </div>
             </div>
 
             <div class='form-floating my-0 mb-3'>
-              <input class='form-control' type='date' name='start_date' id='start_date' placeholder='Fecha de inicio'>
+              <input class='form-control' type='date' name='start_date' id='start_date' placeholder='Fecha de inicio' required>
               <label for='start_date'>Fecha de inicio</label>
+              <div class="invalid-feedback">
+                Ingrese la fecha de inicio
+              </div>
             </div>
             
           </form>
