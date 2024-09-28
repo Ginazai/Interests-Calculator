@@ -1,4 +1,4 @@
-create database if not exists interets_calculator;
+create database if not exists interets_calculator_v1.5;
 use interets_calculator;
 create table accounts(
 	account_id int auto_increment primary key not null,

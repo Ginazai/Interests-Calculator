@@ -21,18 +21,14 @@
 
 
               <div class='form-floating my-3'>
-                <input type='text' name='accout_name' id='accout_name' class='form-control' placeholder='Nombre' required>
+                <input type='text' name='accout_name' id='accout_name' class='form-control form-validate' placeholder='Nombre' val="" required>
                 <label for='accout_name'>Nombre de la cuenta</label>
-                <div class="invalid-feedback">
-                  Porfavor, asigne un nombre a la cuenta
-                </div>
+                <div id="name-error" class="text-danger errors"></div>
               </div>
               <div class='form-floating my-0 mb-3'>
-                <input type='text' name='borrower' id='borrower' class='form-control' placeholder='Deudor' required>
+                <input type='text' name='borrower' id='borrower' class='form-control form-validate' placeholder='Deudor' required>
                 <label for='borrower'>Deudor</label>
-                <div class="invalid-feedback">
-                  Porfavor, ingrese el nombre del deudor
-                </div>
+                <div id="owner-error" class="text-danger errors"></div>
               </div>
 
             <div class="my-0 mb-3">  
@@ -40,10 +36,8 @@
               <div class="input-group">
                 <span class="input-group-text">$</span>
                 <input id="amount_borrowed" name="amount_borrowed" type="text" class="form-control" aria-label="Amount (to the nearest dollar)" required>
-                <div class="invalid-feedback">
-                  Ingrese la cantidad solicitada
-                </div>
               </div>
+              <div id="amount-error" class="text-danger errors"></div>
             </div>
 
             <div class="my-0 mb-3">  
@@ -51,30 +45,28 @@
               <div class="input-group">
                 <input id="interest_rate" name="interest_rate" type="text" class="form-control" aria-label="Interest Rate" required>
                 <span class="input-group-text">%</span>
-                <div class="invalid-feedback">
-                  Ingrese la tasa de interes
-                </div>
               </div>
+              <div id="rate-error" class="text-danger errors"></div>
             </div>
 
-            <div class="input-group mb-3">
-              <label class="input-group-text" for="cycle">Ciclo</label>
-              <select class="form-select" id="cycle" name="cycle" required>
-                <option selected disabled value="">Seleccione...</option>
-                <option value="15">Quincenal</option>
-                <option value="30">Mensual</option>
-              </select>
-              <div class="invalid-feedback">
-                  Ingrese el ciclo
+            <div class="my-0 mb-3"> 
+              <div class="input-group">
+                <label class="input-group-text" for="cycle">Ciclo</label>
+                <select class="form-select" id="cycle" name="cycle" required>
+                  <option selected disabled value="">Seleccione...</option>
+                  <option value="15">Quincenal</option>
+                  <option value="30">Mensual</option>
+                </select>
               </div>
+              <div id="cycle-error" class="text-danger errors"></div>
             </div>
 
-            <div class='form-floating my-0 mb-3'>
-              <input class='form-control' type='date' name='start_date' id='start_date' placeholder='Fecha de inicio' required>
-              <label for='start_date'>Fecha de inicio</label>
-              <div class="invalid-feedback">
-                Ingrese la fecha de inicio
+            <div class="my-0 mb-3">
+              <div class='form-floating'>
+                <input class='form-control' type='date' name='start_date' id='start_date' placeholder='Fecha de inicio' required>
+                <label for='start_date'>Fecha de inicio</label>
               </div>
+              <div id="date-error" class="text-danger errors"></div>
             </div>
             
           </form>
