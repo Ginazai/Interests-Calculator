@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once 'php/connection.php';
 
 require_once 'php/actions/function_payment_history.php';
@@ -53,6 +54,14 @@ $all_payments=json_encode($all_payments, JSON_PRETTY_PRINT);
     <header><?php require_once "html/navbar.php" ?></header>
     <main class="my-5">
     <div class="container">
+      <div id="alert-box" class="alert alert-danger" role="alert">
+        <?php 
+        if(isset($_SESSION['error'])){
+          if($_SESSION['error']){
+            echo $_SESSION['error_msg'];
+          } 
+        } ?>
+      </div>
       <div class="row w-100 mx-auto">
     <?php
     if(count($all_data)>0){
@@ -277,5 +286,6 @@ $all_payments=json_encode($all_payments, JSON_PRETTY_PRINT);
   <link rel="stylesheet" type="text/css" href="assets/css/stylesheet.css">
   <script type="text/javascript" src="assets/js/script.js"></script>
   <script type="text/javascript" src="assets/js/validation.js"></script>
+  <script type="text/javascript" src="assets/js/ajax-unset.js"></script>
   </body>
 </html>
