@@ -1,4 +1,4 @@
-$(document).ready(function(){
+$(document).ready(()=>{
 
   const isValidDate = (stringDate) => {
     const regex = /^\d{4}-\d{2}-\d{2}$/; 
@@ -53,7 +53,7 @@ $(document).ready(function(){
       setInvalid(amount);
       $("#amount-error").html("Ingrese la cantidad solicitada");
     }
-    if(isNaN(amount.val())){
+    else if(isNaN(amount.val())){
       error=true;
       setInvalid(amount);
       $("#amount-error").html("La cantidad solicitada debe ser numerica");
@@ -70,7 +70,7 @@ $(document).ready(function(){
       setInvalid(rate);
       $("#rate-error").html("Ingrese la tasa de intereses");
     }
-    if(isNaN(rate.val())){
+    else if(isNaN(rate.val())){
       error=true;
       setInvalid(rate);
       $("#rate-error").html("La tasa de intereses debe ser numerica");
@@ -113,6 +113,57 @@ $(document).ready(function(){
         e.stopPropagation();
       }
     });
-  })()
+  })();
 
+  //Payment forms validation
+  all_data.map((data)=>{
+    var is_payment_error=true;
+    var id=data.account_id;
+    var form= $(`#payment-add-${id}`);
+    var payment_amount=$(`#payment_amount_${id}`);
+    var payment_date=$(`#payment_date_${id}`);
+
+    var date_error=$(`#payment_date_error_${id}`);
+    var amount_error=$(`#payment_amount_error_${id}`);
+
+    payment_amount.on('click input',()=>{
+      if(payment_amount.val().length<1){
+        is_payment_error=true;
+        setInvalid(payment_amount);
+        amount_error.html("Ingrese la cantidad solicitada");
+      }
+      else if(isNaN(payment_amount.val())){
+        is_payment_error=true;
+        setInvalid(payment_amount);
+        amount_error.html("La cantidad solicitada debe ser numerica");
+      } else {
+        is_payment_error=false;
+        setValid(payment_amount);
+        amount_error.html("");
+      }
+    });
+
+    payment_date.on('click input',()=>{
+      if(!isValidDate(payment_date.val())){
+        is_payment_error=true;
+        setInvalid(payment_date);
+        date_error.html("La fecha es requerida");
+      } else {
+        is_payment_error=false;
+        setValid(payment_date);
+        date_error.html("");
+      }
+    });
+
+    (()=>{
+      'use strict';
+      form.on('submit',(e)=>{  
+        if(!form[0].checkValidity()||is_payment_error){
+          e.preventDefault();
+          e.stopPropagation();
+        }
+      });
+    })();
+
+  });
 });

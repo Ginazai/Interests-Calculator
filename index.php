@@ -22,6 +22,7 @@ foreach($all_payment_history as $all_ac){
 $data=$con->prepare("SELECT * FROM accounts");
 $data->execute();
 while($get_data=$data->fetch(PDO::FETCH_ASSOC)){$all_data[]=$get_data;}
+$account_data=json_encode($all_data, JSON_PRETTY_PRINT);
 
 $payments=$con->prepare("SELECT * FROM payments");
 $payments->execute();
@@ -48,7 +49,8 @@ $all_payments=json_encode($all_payments, JSON_PRETTY_PRINT);
     integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" 
     crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <?= isset($all_payments) ? "<script type='text/javascript'>var all_payments=$all_payments;</script" : "" ?>
+    <?= isset($all_payments) ? "<script type='text/javascript'>var all_payments=$all_payments;</script>" : "" ?>
+    <?= isset($account_data) ? "<script type='text/javascript'>var all_data=$account_data;</script>" : "" ?>
   </head>
   <body>
     <header><?php require_once "html/navbar.php" ?></header>
@@ -186,24 +188,21 @@ $all_payments=json_encode($all_payments, JSON_PRETTY_PRINT);
                   <!--------------------------Add Form -------------------------->
                   <form id='payment-add-<?=$id?>' class='row g-3 needs-validation' role='form' name='payment-add-<?=$id?>' action='php/actions/add_payment.php?id=<?=$id?>' method='post' novalidate>
 
-        
-                      <div class="input-group mb-3">
-                        <span class="input-group-text">$</span>
-                        <input id="payment_amount" type="text" class="form-control" aria-label="Amount (to the nearest dollar)" name="payment_amount" required>
-                        <div class="invalid-feedback">
-                          Ingrese la cantidad del pago
+                      <div class="my-3">
+                        <div class="input-group">
+                          <span class="input-group-text">$</span>
+                          <input id="payment_amount_<?=$id?>" type="text" class="form-control" aria-label="Amount (to the nearest dollar)" name="payment_amount_<?=$id?>" val="" required>
                         </div>
+                        <div class="text-danger" id="payment_amount_error_<?=$id?>"></div>
                       </div>
 
                       <div class='form-floating'>
-                        <input class='form-control' type='date' name='payment_date' id='payment_date' placeholder='Fecha del pago' required>
-                        <label for='payment_date'>Fecha del pago</label>
-                        <div class="invalid-feedback">
-                          Ingrese la fecha del pago
-                        </div>
+                        <input class='form-control' type='date' name='payment_date_<?=$id?>' id='payment_date_<?=$id?>' placeholder='Fecha del pago' val="" required>
+                        <label for='payment_date_<?=$id?>'>Fecha del pago</label>
+                        <div class="text-danger" id="payment_date_error_<?=$id?>"></div>
                       </div>
 
-                      <input class='form-control visually-hidden' type='text' name='previous_balance' id='previous_balance' value="<?=$interests?>" readonly>     
+                      <input class='form-control visually-hidden' type='text' name='previous_balance_<?=$id?>' id='previous_balance_<?=$id?>' value="<?=$interests?>" readonly>     
                     
                   </form>
                   <!--------------------------Add Form -------------------------->
