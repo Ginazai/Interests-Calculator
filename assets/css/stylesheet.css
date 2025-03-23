@@ -4,7 +4,14 @@ body {
 	background-size: contain;
 	background-position: center;  
 }
-
+html, body {
+    min-height: 100vh;
+    min-width: 100vw;
+    overflow-x: hidden;
+}
+a {
+    text-decoration: none;
+}
 .input-container input {
     border: none;
     box-sizing: border-box;

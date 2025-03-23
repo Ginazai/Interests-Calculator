@@ -3,7 +3,7 @@ function get_payment_history(){
   $host="localhost";
   $user="";
   $password="";
-  $db="interets_calculator";
+  $db="interests_calculator_v2.0";
 
   $dsn = "mysql:host=$host;dbname=$db";
   $con = new PDO($dsn, $user, $password);

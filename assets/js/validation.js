@@ -130,12 +130,12 @@ $(document).ready(()=>{
       if(payment_amount.val().length<1){
         is_payment_error=true;
         setInvalid(payment_amount);
-        amount_error.html("Ingrese la cantidad solicitada");
+        amount_error.html("Ingrese la cantidad del pago");
       }
       else if(isNaN(payment_amount.val())){
         is_payment_error=true;
         setInvalid(payment_amount);
-        amount_error.html("La cantidad solicitada debe ser numerica");
+        amount_error.html("La cantidad del pago debe ser numerica");
       } else {
         is_payment_error=false;
         setValid(payment_amount);
