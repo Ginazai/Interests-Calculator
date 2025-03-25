@@ -53,7 +53,7 @@ if (isset($_GET['page'])) {
 // Calculate the starting record index
 $startFrom = ($currentPage - 1) * $recordsPerPage;
 
-
+$all_data=[];
 $data=$con->prepare("SELECT * FROM accounts WHERE active=0 LIMIT $startFrom, $recordsPerPage");
 $data->execute();
 while($get_data=$data->fetch(PDO::FETCH_ASSOC)){$all_data[]=$get_data;}
@@ -76,7 +76,7 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Interests Calculator</title>
+    <title>Historial</title>
     <script 
     src="https://code.jquery.com/jquery-3.7.1.min.js" 
     integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" 
@@ -150,9 +150,9 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
               </h2>
               <div id="collapse-<?= $id ?>" class="accordion-collapse collapse" data-bs-parent="#data-accordion-<?= $id ?>">
                 <div class="accordion-body">
-                  <a class='btn btn-secondary btn-sm m-1 float-end' href='php/actions/create_csv.php?id=<?=$id?>' type='submit'><i class="fa fa-download" style="font-size:18px"></i> Descargar CSV</a>     
-                  <button class='btn btn-success btn-sm m-1' type='submit' data-bs-toggle='modal' data-bs-target='#add-payment-<?=$id?>'><i class="fa fa-money" style="font-size:18px"></i> Agregar pago</button></br>
-                  <button class='btn btn-secondary btn-sm m-1' type='submit' data-bs-toggle='modal' data-bs-target='#confirm-delete-account-<?=$id?>'><i class="fa fa-minus-square" style="font-size:18px"></i> Eliminar cuenta</button>  
+                  <button class='btn btn-success btn-sm m-1' type='button'><a class="text-white" href='php/actions/create_csv.php?id=<?=$id?>' type='submit'><i class="fa fa-download" style="font-size:18px"></i> Descargar CSV</a></button></br>
+
+                  <button class='btn btn-secondary btn-sm m-1' type='button' data-bs-toggle='modal' data-bs-target='#confirm-delete-account-<?=$id?>'><i class="fa fa-minus-square" style="font-size:18px"></i> Eliminar cuenta</button>  
 
                   <table class="table table-striped">
                     <thead>
@@ -221,47 +221,6 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
             </div>
           </div>
         </div>
-        <!----------------------------------------- Add payment modal ------------------------------------------>
-        <div class='modal fade' id='add-payment-<?=$id?>' tabindex='-1' aria-labelledby='modal-label' aria-hidden='true'>
-          <div class='modal-dialog modal-dialog-centered'>
-            <div class='modal-content'>
-              <div class='modal-header bg-dark'>
-                <h1 class='modal-title fs-5 text-white' id='modal-label'>Agregar pago a cuenta: <span class='text-success'><?=$account_name?></span></h1>
-              </div>
-              <div class='modal-body'>
-                <div class='container-fluid justify-content-center form-signin'>
-                  <!--------------------------Add Form -------------------------->
-                  <form id='payment-add-<?=$id?>' class='row g-3 needs-validation' role='form' name='payment-add-<?=$id?>' action='php/actions/add_payment.php?id=<?=$id?>' method='post' novalidate>
-
-                      <div class="my-3">
-                        <div class="input-group">
-                          <span class="input-group-text">$</span>
-                          <input id="payment_amount_<?=$id?>" type="text" class="form-control" aria-label="Amount (to the nearest dollar)" name="payment_amount_<?=$id?>" val="" required>
-                        </div>
-                        <div class="text-danger" id="payment_amount_error_<?=$id?>"></div>
-                      </div>
-
-                      <div class='form-floating'>
-                        <input class='form-control' type='date' name='payment_date_<?=$id?>' id='payment_date_<?=$id?>' placeholder='Fecha del pago' val="" required>
-                        <label for='payment_date_<?=$id?>'>Fecha del pago</label>
-                        <div class="text-danger" id="payment_date_error_<?=$id?>"></div>
-                      </div>
-
-                      <input class='form-control visually-hidden' type='text' name='previous_balance_<?=$id?>' id='previous_balance_<?=$id?>' value="<?=$interests?>" readonly>     
-                    
-                  </form>
-                  <!--------------------------Add Form -------------------------->
-                </div>
-              </div>
-
-              <div class='modal-footer bg-dark'>
-                <button type='submit' form='payment-add-<?=$id?>' class='btn btn-success'>Agregar pago</button>
-                <button type='button' class='btn btn-secondary' data-bs-dismiss='modal'>Cerrar</button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!----------------------------------------- Add payment modal ------------------------------------------>
         <!-------------------------------------- Confirm delete account modal-------------------------------------->
         <div class='modal fade' id='confirm-delete-account-<?=$id?>' tabindex='-1' aria-labelledby='modal-label' aria-hidden='true'>
           <div class='modal-dialog modal-dialog-centered'>

@@ -15,8 +15,8 @@ function dataError(){
 }
 if(isset($_POST)&&!dataError()){
 	$add_account = $con->prepare("INSERT INTO accounts 
-								(account_name,borrow_amount,owner,create_date,active,cycle,rate) 
-								VALUES (:an,:bo,:own,:cdt,:act,:cyc,:rt)");
+								(account_name,borrow_amount,owner,create_date,active,cycle,rate,method_id) 
+								VALUES (:an,:bo,:own,:cdt,:act,:cyc,:rt,:mt)");
 	$add_account->execute([
 		":an" => $_POST['accout_name'],
 		":bo" => $_POST['amount_borrowed'],
@@ -24,7 +24,8 @@ if(isset($_POST)&&!dataError()){
 		":cdt" => $_POST['start_date'],
 		":act" => 1,
 		":cyc" => $_POST['cycle'],
-		":rt" => $_POST['interest_rate']/100
+		":rt" => $_POST['interest_rate']/100,
+		":mt" => $_POST['method']
 	]);
 
 	$_SESSION['error']=false;

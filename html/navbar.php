@@ -25,8 +25,7 @@ along with this program. If not, see https://www.gnu.org/licenses/gpl-3.0.en.htm
 <!---------------------------------------------- Offacanvas ---------------------------------------------->
 <div id="menu" class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1"  aria-labelledby="menu_label">
   <div class="offcanvas-header">
-    <h5 class="offcanvas-title" id="menu_label"><i class="fa fa-navicon" style="font-size:1em"></i> Menu</h5>
-    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    <h5 class="offcanvas-title mx-auto" id="menu_label"><i class="fa fa-navicon" style="font-size:1em"></i> Menu</h5>
   </div>
   <div class="offcanvas-body">
     <ul class="list-group list-group-flush">
@@ -47,11 +46,11 @@ along with this program. If not, see https://www.gnu.org/licenses/gpl-3.0.en.htm
       <div class='modal-body'>
         <div class='container-fluid justify-content-center form-signin'>
     <!--------------------------Add Form -------------------------->
-          <form id='account-add' class='row g-3 needs-validation' role='form' name='account-add' action='php/actions/add_account.php' method='post' novalidate>
+          <form id='account-add' class='row g-3 needs-validation' name='account-add' action='php/actions/add_account.php' method='post' novalidate>
 
 
               <div class='form-floating my-3'>
-                <input type='text' name='accout_name' id='accout_name' class='form-control form-validate' placeholder='Nombre' val="" required>
+                <input type='text' name='accout_name' id='accout_name' class='form-control form-validate' placeholder='Nombre' required>
                 <label for='accout_name'>Nombre de la cuenta</label>
                 <div id="name-error" class="text-danger errors"></div>
               </div>
@@ -61,19 +60,19 @@ along with this program. If not, see https://www.gnu.org/licenses/gpl-3.0.en.htm
                 <div id="owner-error" class="text-danger errors"></div>
               </div>
 
-            <div class="my-0 mb-3">  
-              <label for="amount_borrowed" class="form-label">Cantidad solicitada</label>
+            <div class="my-0 mb-3">
               <div class="input-group">
+                <span class="input-group-text">Cantidad solicitada</span>
                 <span class="input-group-text">$</span>
                 <input id="amount_borrowed" name="amount_borrowed" type="text" class="form-control" aria-label="Amount (to the nearest dollar)" required>
               </div>
               <div id="amount-error" class="text-danger errors"></div>
             </div>
 
-            <div class="my-0 mb-3">  
-              <label for="interest_rate" class="form-label">Tasa de interes</label>
+            <div class="my-0 mb-3">
               <div class="input-group">
-                <input id="interest_rate" name="interest_rate" type="text" class="form-control" aria-label="Interest Rate" required>
+                <label class="input-group-text" for="interest_rate">Tasa de interes</label>
+                <input id="interest_rate" class="form-control" name="interest_rate" type="text" aria-label="Interest Rate" required>
                 <span class="input-group-text">%</span>
               </div>
               <div id="rate-error" class="text-danger errors"></div>
@@ -92,8 +91,19 @@ along with this program. If not, see https://www.gnu.org/licenses/gpl-3.0.en.htm
             </div>
 
             <div class="my-0 mb-3">
+              <div class="input-group">
+                <label class="input-group-text" for="method">Metodo de calculo</label>
+                <select name="method" class="form-select" id="method">
+                  <option  value="1"selected>Automatico</option>
+                  <option value="2">Manual</option>
+                </select>
+                <div id="method-error" class="text-danger errors"></div>
+              </div>
+            </div>
+
+            <div class="my-0 mb-3">
               <div class='form-floating'>
-                <input class='form-control' type='date' name='start_date' id='start_date' placeholder='Fecha de inicio' required>
+                <input class='form-control' type='date' name='start_date' id='start_date' required>
                 <label for='start_date'>Fecha de inicio</label>
               </div>
               <div id="date-error" class="text-danger errors"></div>

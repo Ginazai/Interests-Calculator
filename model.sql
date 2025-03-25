@@ -6,7 +6,8 @@ create table accounts(
 	borrow_amount float not null,
 	owner varchar(100) not null,
 
-	method_id int not null DEFAULT 0,
+	method_id int not null DEFAULT 1,
+	deleted boolean not null DEFAULT 0,
 
 	create_date date not null,
 	cycle int not null,
@@ -32,8 +33,10 @@ create table payments(
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 create table methods(
 	method_id int auto_increment primary key not null,
-	method_name archar(100) not null,
+	method_name varchar(100) not null
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
+INSERT INTO methods(method_name) VALUES ("automatic");
+INSERT INTO methods(method_name) VALUES ("manual");
 ----------------------------------------
 ------------------------------------------test values----------------------------------------
 insert into accounts(account_name,borrow_amount,owner,create_date,active) values ('sample account',300.00,'Sample owner','01-01-2024 00:00:00',1);

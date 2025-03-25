@@ -41,7 +41,7 @@ foreach($all_payment_history as $all_ac){
   }
 }
 // Number of records per page
-$recordsPerPage = 4;
+$recordsPerPage = 5;
 
 // Current page number
 if (isset($_GET['page'])) {
@@ -53,8 +53,8 @@ if (isset($_GET['page'])) {
 // Calculate the starting record index
 $startFrom = ($currentPage - 1) * $recordsPerPage;
 
-
-$data=$con->prepare("SELECT * FROM accounts WHERE active=1 LIMIT $startFrom, $recordsPerPage");
+$all_data=[];
+$data=$con->prepare("SELECT * FROM accounts WHERE active=1 AND deleted=0 LIMIT $startFrom, $recordsPerPage");
 $data->execute();
 while($get_data=$data->fetch(PDO::FETCH_ASSOC)){$all_data[]=$get_data;}
 $account_data=json_encode($all_data, JSON_PRETTY_PRINT);
@@ -65,7 +65,7 @@ while($payment_row=$payments->fetch(PDO::FETCH_ASSOC)){$all_payments[]=$payment_
 $all_payments=json_encode($all_payments, JSON_PRETTY_PRINT);
 
 // Pagination links
-$sql = "SELECT COUNT(*) AS total FROM accounts WHERE active=1";
+$sql = "SELECT COUNT(*) AS total FROM accounts WHERE active=1 AND deleted=0";
 $result = $con->query($sql);
 $row = $result->fetch(PDO::FETCH_ASSOC);
 $totalRecords = $row["total"];
@@ -98,7 +98,7 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
     <header><?php require_once "html/navbar.php" ?></header>
     <main class="my-3">
     <div class="container">
-      <div id="alert-box" class="alert alert-danger" role="alert">
+      <div id="alert-box" class="alert alert-danger visually-hidden" role="alert">
         <?php 
         if(isset($_SESSION['error'])){
           if($_SESSION['error']){
@@ -117,12 +117,10 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
         $owner=$account['owner'];
         $create_date=date('d-m-Y',strtotime($account['create_date']));
         $active=$account['active'];
+        $method=$account['method_id'];
+        $deleted=$account['deleted'];
         $cycle=$account['cycle'];
         $interests_rate=$account['rate'];
-
-        // if($active == 0) {
-        //   break;
-        // }
 
         $show_date=date('d/m/Y',strtotime($account['create_date']));
         ?>
@@ -150,10 +148,10 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
               </h2>
               <div id="collapse-<?= $id ?>" class="accordion-collapse collapse" data-bs-parent="#data-accordion-<?= $id ?>">
                 <div class="accordion-body">
-                  <a class='btn btn-secondary btn-sm m-1 float-end' href='php/actions/create_csv.php?id=<?=$id?>' type='submit'><i class="fa fa-download" style="font-size:18px"></i> Descargar CSV</a>     
+                  <a class='btn btn-secondary btn-sm m-1 float-end' href='php/actions/create_csv.php?id=<?=$id?>'><i class="fa fa-download" style="font-size:18px"></i> Descargar CSV</a>     
                   <button class='btn btn-success btn-sm m-1' type='submit' data-bs-toggle='modal' data-bs-target='#add-payment-<?=$id?>'><i class="fa fa-money" style="font-size:18px"></i> Agregar pago</button></br>
                   <button class='btn btn-secondary btn-sm m-1' type='submit' data-bs-toggle='modal' data-bs-target='#confirm-delete-account-<?=$id?>'><i class="fa fa-minus-square" style="font-size:18px"></i> Eliminar cuenta</button>  
-
+ 
                   <table class="table table-striped">
                     <thead>
                       <tr>
@@ -222,30 +220,32 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
           </div>
         </div>
         <!----------------------------------------- Add payment modal ------------------------------------------>
-        <div class='modal fade' id='add-payment-<?=$id?>' tabindex='-1' aria-labelledby='modal-label' aria-hidden='true'>
+        <div class='modal fade' id='add-payment-<?=$id?>' tabindex='-1' aria-labelledby='payment-modal-label-<?=$id?>' aria-hidden='true'>
           <div class='modal-dialog modal-dialog-centered'>
             <div class='modal-content'>
               <div class='modal-header bg-dark'>
-                <h1 class='modal-title fs-5 text-white' id='modal-label'>Agregar pago a cuenta: <span class='text-success'><?=$account_name?></span></h1>
+                <h1 class='modal-title fs-5 text-white' id='payment-modal-label-<?=$id?>'>Agregar pago a cuenta: <span class='text-success'><?=$account_name?></span></h1>
               </div>
               <div class='modal-body'>
                 <div class='container-fluid justify-content-center form-signin'>
                   <!--------------------------Add Form -------------------------->
-                  <form id='payment-add-<?=$id?>' class='row g-3 needs-validation' role='form' name='payment-add-<?=$id?>' action='php/actions/add_payment.php?id=<?=$id?>' method='post' novalidate>
+                  <form id='payment-add-<?=$id?>' class='row g-3 needs-validation' name='payment-add-<?=$id?>' action='php/actions/add_payment.php?id=<?=$id?>' method='post' novalidate>
 
                       <div class="my-3">
                         <div class="input-group">
                           <span class="input-group-text">$</span>
-                          <input id="payment_amount_<?=$id?>" type="text" class="form-control" aria-label="Amount (to the nearest dollar)" name="payment_amount_<?=$id?>" val="" required>
+                          <input id="payment_amount_<?=$id?>" type="text" class="form-control" aria-label="Amount (to the nearest dollar)" name="payment_amount_<?=$id?>" required>
                         </div>
                         <div class="text-danger" id="payment_amount_error_<?=$id?>"></div>
                       </div>
 
+                      <?php //if($method==2):?>  
                       <div class='form-floating'>
-                        <input class='form-control' type='date' name='payment_date_<?=$id?>' id='payment_date_<?=$id?>' placeholder='Fecha del pago' val="" required>
+                        <input class='form-control' type='date' name='payment_date_<?=$id?>' id='payment_date_<?=$id?>' required>
                         <label for='payment_date_<?=$id?>'>Fecha del pago</label>
                         <div class="text-danger" id="payment_date_error_<?=$id?>"></div>
                       </div>
+                      <?php //endif;?>
 
                       <input class='form-control visually-hidden' type='text' name='previous_balance_<?=$id?>' id='previous_balance_<?=$id?>' value="<?=$interests?>" readonly>     
                     
@@ -261,17 +261,17 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
             </div>
           </div>
         </div>
-        <!----------------------------------------- Add payment modal ------------------------------------------>
+        <!----------------------------------------- Add payment modal ------------------------------------------>   
         <!-------------------------------------- Confirm delete account modal-------------------------------------->
-        <div class='modal fade' id='confirm-delete-account-<?=$id?>' tabindex='-1' aria-labelledby='modal-label' aria-hidden='true'>
+        <div class='modal fade' id='confirm-delete-account-<?=$id?>' tabindex='-1' aria-labelledby='confirm-modal-label-<?=$id?>' aria-hidden='true'>
           <div class='modal-dialog modal-dialog-centered'>
             <div class='modal-content'>
               <div class='modal-header bg-dark my-0'>
-                <h1 class='modal-title fs-5 text-white' id='modal-label'>Seguro que quieres borrar la cuenta <span class='text-success'><?=$account_name?></span>? (esta accion no es reversible)</h1>
+                <h1 class='modal-title fs-5 text-white' id='confirm-modal-label-<?=$id?>'>Seguro que quieres borrar la cuenta <span class='text-success'><?=$account_name?></span>?</h1>
               </div>
               <div class='modal-body p-0'>
                 <div class='container-fluid my-0 justify-content-center form-signin'>
-                  <form id='delete-account-<?=$id?>' class='row g-3' role='form' name='delete-account-<?=$id?>' action='php/actions/delete_account.php?id=<?=$id?>' method='post'></form>
+                  <form id='delete-account-<?=$id?>' class='row g-3' name='delete-account-<?=$id?>' action='php/actions/delete_account.php?id=<?=$id?>' method='post'></form>
                 </div>
               </div>
 
@@ -314,20 +314,20 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
       var payment_id=payment.payment_id;
       var amount=payment.amount;
 
-      var content=`<div class="modal fade" id="confirm-delete-payment-${payment_id}" tabindex="-1" aria-labelledby="modal-label" aria-hidden="true">
+      var content=`<div class="modal fade" id="confirm-delete-payment-${payment_id}" tabindex="-1" aria-labelledby="modal-label-${payment_id}" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
           <div class="modal-content">
             <div class="modal-header bg-dark my-0">
-              <h1 class="modal-title fs-5 text-white" id="modal-label">Seguro que quieres borrar el pago de <span class="text-success">${amount}</span>? (esta accion no es reversible)</h1>
+              <h1 class="modal-title fs-5 text-white" id="modal-label-${payment_id}">Seguro que quieres borrar el pago de <span class="text-success">${amount}</span>? (esta accion no es reversible)</h1>
             </div>
             <div class="modal-body p-0">
               <div class="container-fluid my-0 justify-content-center form-signin">
-                <form id="delete-payment-${payment_id}" class="row g-3" role="form" name="delete-payment-${payment_id}"" action="php/actions/delete_payment.php?id=${payment_id}"" method="post"></form>
+                <form id="delete-payment-${payment_id}" class="row g-3" name="delete-payment-${payment_id}" action="php/actions/delete_payment.php?id=${payment_id}" method="post"></form>
               </div>
             </div>
       
             <div class="modal-footer bg-dark my-0">
-              <button type="submit" form="delete-payment-${payment_id}"" class="btn btn-success">Confirmar</button>
+              <button type="submit" form="delete-payment-${payment_id}" class="btn btn-success">Confirmar</button>
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
             </div>
           </div>

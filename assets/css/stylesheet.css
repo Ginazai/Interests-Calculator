@@ -1,13 +1,16 @@
 body {
 	background: url("../images/doodles-background.png");
 	background-repeat: repeat;
-	background-size: contain;
-	background-position: center;  
+/*	background-size: contain;
+	background-position: center;  */
 }
 html, body {
     min-height: 100vh;
     min-width: 100vw;
     overflow-x: hidden;
+}
+.table-responsive {
+    max-height:300px;
 }
 a {
     text-decoration: none;
