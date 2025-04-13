@@ -1,5 +1,9 @@
-create database if not exists interets_calculator_v1.5;
-use interets_calculator;
+create database if not exists interest_calculator_v1.5;
+use interest_calculator;
+create table methods(
+	method_id int auto_increment primary key not null,
+	method_name varchar(100) not null
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
 create table accounts(
 	account_id int auto_increment primary key not null,
 	account_name varchar(100) not null,
@@ -30,10 +34,6 @@ create table payments(
 	references accounts (account_id)
 	on delete cascade
 	on update cascade
-)ENGINE=InnoDB DEFAULT CHARSET=utf8;
-create table methods(
-	method_id int auto_increment primary key not null,
-	method_name varchar(100) not null
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 INSERT INTO methods(method_name) VALUES ("automatic");
 INSERT INTO methods(method_name) VALUES ("manual");

@@ -1,7 +1,10 @@
 body {
-	background: url("../images/doodles-background.png");
+/*	background: url("../images/doodles-background.png");*/
+background: url("../images/patterns.png");
+/*    background: url("../images/bg_alt_1.png");*/
+/*    background: url("../images/bg_alt_2.png");*/
 	background-repeat: repeat;
-/*	background-size: contain;
+/*	background-size: cover;
 	background-position: center;  */
 }
 html, body {

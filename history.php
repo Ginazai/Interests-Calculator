@@ -54,7 +54,7 @@ if (isset($_GET['page'])) {
 $startFrom = ($currentPage - 1) * $recordsPerPage;
 
 $all_data=[];
-$data=$con->prepare("SELECT * FROM accounts WHERE active=0 LIMIT $startFrom, $recordsPerPage");
+$data=$con->prepare("SELECT * FROM accounts WHERE active=0 AND deleted=0 LIMIT $startFrom, $recordsPerPage");
 $data->execute();
 while($get_data=$data->fetch(PDO::FETCH_ASSOC)){$all_data[]=$get_data;}
 $account_data=json_encode($all_data, JSON_PRETTY_PRINT);
@@ -65,7 +65,7 @@ while($payment_row=$payments->fetch(PDO::FETCH_ASSOC)){$all_payments[]=$payment_
 $all_payments=json_encode($all_payments, JSON_PRETTY_PRINT);
 
 // Pagination links
-$sql = "SELECT COUNT(*) AS total FROM accounts WHERE active=0";
+$sql = "SELECT COUNT(*) AS total FROM accounts WHERE active=0 AND deleted=0";
 $result = $con->query($sql);
 $row = $result->fetch(PDO::FETCH_ASSOC);
 $totalRecords = $row["total"];

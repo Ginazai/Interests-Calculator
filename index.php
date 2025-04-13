@@ -58,7 +58,7 @@ $data=$con->prepare("SELECT * FROM accounts WHERE active=1 AND deleted=0 LIMIT $
 $data->execute();
 while($get_data=$data->fetch(PDO::FETCH_ASSOC)){$all_data[]=$get_data;}
 $account_data=json_encode($all_data, JSON_PRETTY_PRINT);
-
+$all_payments=[];
 $payments=$con->prepare("SELECT * FROM payments");
 $payments->execute();
 while($payment_row=$payments->fetch(PDO::FETCH_ASSOC)){$all_payments[]=$payment_row;}
