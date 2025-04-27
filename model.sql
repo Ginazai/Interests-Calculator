@@ -35,6 +35,18 @@ create table payments(
 	on delete cascade
 	on update cascade
 )ENGINE=InnoDB DEFAULT CHARSET=utf8;
+-- create table interests(
+-- 	interests_id int auto_increment primary key not null,
+-- 	amount float float not null default 0.00,
+-- 	create_date date not null,
+-- 	payment_id int not null,
+
+-- 	constraint fk_payment_id_interest
+-- 	foreign key (payment_id)
+-- 	references payments (payment_id)
+-- 	on delete cascade
+-- 	on update cascade
+-- )ENGINE=InnoDB DEFAULT CHARSET=utf8;
 INSERT INTO methods(method_name) VALUES ("automatic");
 INSERT INTO methods(method_name) VALUES ("manual");
 ----------------------------------------

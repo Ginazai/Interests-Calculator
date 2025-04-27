@@ -25,7 +25,7 @@ along with this program. If not, see https://www.gnu.org/licenses/gpl-3.0.en.htm
 <!---------------------------------------------- Offacanvas ---------------------------------------------->
 <div id="menu" class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1"  aria-labelledby="menu_label">
   <div class="offcanvas-header">
-    <h5 class="offcanvas-title mx-auto" id="menu_label"><i class="fa fa-navicon" style="font-size:1em"></i> Menu</h5>
+    <h5 class="offcanvas-title" id="menu_label"><i class="fa fa-navicon" style="font-size:1em"></i> Menu</h5>
   </div>
   <div class="offcanvas-body">
     <ul class="list-group list-group-flush">

@@ -8,6 +8,6 @@ if(isset($_POST)){
 	$delete_payment = $con->prepare("DELETE FROM payments WHERE payment_id=:pid");
 	$delete_payment->execute([":pid"=>$id]);
 
-	echo("<script type='application/javascript'>window.location='../../index.php';</script>");
+	echo("<script type='application/javascript'>window.location='{$_SERVER['HTTP_REFERER']}';</script>");
 }
 ?>

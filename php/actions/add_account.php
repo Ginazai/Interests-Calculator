@@ -30,10 +30,10 @@ if(isset($_POST)&&!dataError()){
 
 	$_SESSION['error']=false;
 	$_SESSION['error_msg']="";
-	echo("<script type='application/javascript'>window.location='../../index.php';</script>");
+	echo("<script type='application/javascript'>window.location='{$_SERVER['HTTP_REFERER']}';</script>");
 } else {
 	$_SESSION['error']=true;
 	$_SESSION['error_msg']="Ocurrio un error al subir la informacion. Verifique e intente otra vez.";
-	echo("<script type='application/javascript'>window.location='../../index.php';</script>");
+	echo("<script type='application/javascript'>window.location='{$_SERVER['HTTP_REFERER']}';</script>");
 }
 ?>

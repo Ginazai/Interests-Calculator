@@ -8,5 +8,5 @@ if(isset($_POST)){
 	$delete_account = $con->prepare("DELETE FROM accounts WHERE account_id=:aid");
 	$delete_account->execute([":aid"=>$id]);
 
-	echo("<script type='application/javascript'>window.location='../../index.php';</script>");
+	echo("<script type='application/javascript'>window.location='{$_SERVER['HTTP_REFERER']}';</script>");
 }
