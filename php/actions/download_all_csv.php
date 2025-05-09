@@ -13,10 +13,15 @@ if(isset($_POST)){
   
   $get_data->execute();
   $all_data=$get_data->fetchAll(PDO::FETCH_ASSOC);
-  $file = fopen('php://output', 'w'); 
-  $csv_header=array("Referencia","Fecha","Descripcion","Debito","Credito");
-  fputcsv($file, array_values($csv_header));    
+  $file = fopen('php://output', 'w');       
   if($all_data>0){
+    $fname="borrowing_data_as_of_".date('d-m-Y',strtotime(date_default_timezone_get())).".csv";
+    header('Content-Type: text/csv');
+    header('Content-Disposition: attachment; filename="'.$fname.'"');
+    header('Pragma: no-cache');
+    header('Expires: 0');
+    $csv_header=array("Referencia","Fecha","Descripcion","Debito","Credito");
+    fputcsv($file, array_values($csv_header));
     foreach($all_data as $element){
       $data_type=array_keys((array)$element);
       $fecha=date('d/m/Y',strtotime($element['create_date']));
@@ -40,14 +45,12 @@ if(isset($_POST)){
         $credito="";
       } else {continue;}
       
+      $last_elem = end($all_data);
+
       $csv_output=array($referencia,$fecha,$descripcion,$debito,$credito);
-      $fname="borrowing_data_as_of_".date('d-m-Y',strtotime(date_default_timezone_get())).".csv";
-      header('Content-Type: text/csv');
-      header('Content-Disposition: attachment; filename="'.$fname.'"');
-      header('Pragma: no-cache');
-      header('Expires: 0');
-      fputcsv($file, array_values($csv_output));
-    }
+      fputcsv($file, array_values($csv_output)); 
+      
+    }    
   }
   fclose($file);
 }  
