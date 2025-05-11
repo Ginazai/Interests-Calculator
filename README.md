@@ -13,14 +13,24 @@
   </tr>
   <tr>
     <td>Handling basic CRUD operations towards payments.</td>
+    <td>Implement fixed interests.</td>
+  </tr>
+
+  <tr>
     <td>Perform interests calculations based in the data stored and the cycle selected (every 15/30 days).</td>
+    <td>Receipt generation in <code>.pdf</code> format.</td>
+  </tr>
+
+  <tr>
     <td>Perform Automatic dates calculations based on cycle.</td>
+    <td><code>.csv</code> importing support.</td>
   </tr>
   <tr>
-    <td>Implement fixed interests.</td>
-    <td>Receipt generation in <code>.pdf</code> format.</td>
-    <td><code>.csv</code> importing support.</td>
-    <td>Improve <code>.csv</code> data outputs for managing accountabiliy</td>
+  	<td></td>
+  	<td>Improve <code>.csv</code> data outputs for managing accountabiliy</td>
+  </tr>
+  <tr>
+  	<td></td>
     <td>Better <code>.csv</code> integration to support more accounting features.</td>
   </tr>
 </table>
