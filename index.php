@@ -91,7 +91,8 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
     integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" 
     crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    <?= isset($all_payments) ? "<script type='text/javascript'>var all_payments=$all_payments;</script>" : "" ?>
+    <script type='text/javascript'  src="assets/js/all_payments.js"></script>
+    <?= isset($all_payments) ? "<script type='text/javascript'>all_payments=$all_payments;</script>" : "" ?>
     <?= isset($account_data) ? "<script type='text/javascript'>var all_data=$account_data;</script>" : "" ?>
   </head>
   <body>
@@ -219,7 +220,7 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
             </div>
           </div>
         </div>
-        <!----------------------------------------- Add payment modal ------------------------------------------>
+        <!----------------------------------------- Add payment modal start ------------------------------------------>
         <div class='modal fade' id='add-payment-<?=$id?>' tabindex='-1' aria-labelledby='payment-modal-label-<?=$id?>' aria-hidden='true'>
           <div class='modal-dialog modal-dialog-centered'>
             <div class='modal-content'>
@@ -231,6 +232,16 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
                   <!--------------------------Add Form -------------------------->
                   <form id='payment-add-<?=$id?>' class='row g-3 needs-validation' name='payment-add-<?=$id?>' action='php/actions/add_payment.php?id=<?=$id?>' method='post' novalidate>
 
+                    <div class="my-3"> 
+                      <div class="input-group">
+                        <label class="input-group-text" for="method_<?=$id?>">Metodo de calculo</label>
+                        <select class="form-select" id="method_<?=$id?>" name="method_<?=$id?>" required>
+                          <option selected value="1">Autom&aacute;tico</option>
+                          <option value="2">Manual</option>
+                        </select>
+                      </div>
+                    </div>
+
                       <div class="my-3">
                         <div class="input-group">
                           <span class="input-group-text">$</span>
@@ -239,13 +250,11 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
                         <div class="text-danger" id="payment_amount_error_<?=$id?>"></div>
                       </div>
 
-                      <?php //if($method==2):?>  
-                      <div class='form-floating'>
-                        <input class='form-control' type='date' name='payment_date_<?=$id?>' id='payment_date_<?=$id?>' required>
+                      <div id="payment_date_sect_<?=$id?>" class='form-floating visually-hidden'>
+                        <input class='form-control' type='date' name='payment_date_<?=$id?>' id='payment_date_<?=$id?>'>
                         <label for='payment_date_<?=$id?>'>Fecha del pago</label>
                         <div class="text-danger" id="payment_date_error_<?=$id?>"></div>
                       </div>
-                      <?php //endif;?>
 
                       <input class='form-control visually-hidden' type='text' name='previous_balance_<?=$id?>' id='previous_balance_<?=$id?>' value="<?=$interests?>" readonly>     
                     
@@ -261,7 +270,7 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
             </div>
           </div>
         </div>
-        <!----------------------------------------- Add payment modal ------------------------------------------>   
+        <!----------------------------------------- Add payment modal end------------------------------------------>   
         <!-------------------------------------- Confirm delete account modal-------------------------------------->
         <div class='modal fade' id='confirm-delete-account-<?=$id?>' tabindex='-1' aria-labelledby='confirm-modal-label-<?=$id?>' aria-hidden='true'>
           <div class='modal-dialog modal-dialog-centered'>
@@ -313,6 +322,7 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
     all_payments.map((payment)=>{
       var payment_id=payment.payment_id;
       var amount=payment.amount;
+      var account_id=payment.account_id;
 
       var content=`<div class="modal fade" id="confirm-delete-payment-${payment_id}" tabindex="-1" aria-labelledby="modal-label-${payment_id}" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -334,6 +344,21 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
         </div>
       </div>`;
       $('#payments-modals').append(content);
+
+      $(document).ready(()=>{
+        $(`#method_${account_id}`).change(() => {
+
+          var this_elem = $(`#method_${account_id}`);
+          if(this_elem.val() == 1){
+            console.log($(`payment_date_sect_${account_id}`).html());
+            $(`#payment_date_sect_${account_id}`).addClass("visually-hidden");
+            $(`#payment_date_${account_id}`).attr("required", false);
+          } else {
+            $(`#payment_date_sect_${account_id}`).removeClass("visually-hidden");
+            $(`#payment_date_${account_id}`).attr("required", true);
+          }
+        });
+      });
     });
   </script>
   <script 
