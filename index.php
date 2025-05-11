@@ -118,7 +118,6 @@ $totalPages = ceil($totalRecords / $recordsPerPage);
         $owner=$account['owner'];
         $create_date=date('d-m-Y',strtotime($account['create_date']));
         $active=$account['active'];
-        $method=$account['method_id'];
         $deleted=$account['deleted'];
         $cycle=$account['cycle'];
         $interests_rate=$account['rate'];

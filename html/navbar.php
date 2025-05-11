@@ -89,18 +89,7 @@ along with this program. If not, see https://www.gnu.org/licenses/gpl-3.0.en.htm
               </div>
               <div id="cycle-error" class="text-danger errors"></div>
             </div>
-
-            <div class="my-0 mb-3">
-              <div class="input-group">
-                <label class="input-group-text" for="method">Metodo de calculo</label>
-                <select name="method" class="form-select" id="method">
-                  <option  value="1"selected>Automatico</option>
-                  <option value="2">Manual</option>
-                </select>
-                <div id="method-error" class="text-danger errors"></div>
-              </div>
-            </div>
-
+            
             <div class="my-0 mb-3">
               <div class='form-floating'>
                 <input class='form-control' type='date' name='start_date' id='start_date' required>

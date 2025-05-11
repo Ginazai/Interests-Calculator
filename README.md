@@ -34,12 +34,42 @@
     <td>Better <code>.csv</code> integration to support more accounting features.</td>
   </tr>
 </table>
-
+<table>
+  <tr>
+    <th>Outside the scope of this version:</th>
+  </tr>
+  <tr>
+    <td><code>.csv</code> importing support.</td>
+  </tr>
+  <tr>
+  	<td>Improve <code>.csv</code> data outputs for managing accountabiliy</td>
+  </tr>
+  <tr>
+    <td>Better <code>.csv</code> integration to support more accounting features.</td>
+  </tr>
+</table>
 <h3>Data model</h3>
 <h2>State:</h2>
-<ul>
-	<li>[pending image]</li>
-	<li><b>Current: </b>the current data model consist in the structure above (pending image).</li>
-	<li><b>Future: </b>implement more efficient queries throughout code. plan to implement view to automatically structure the data that the <code>.php</code> receives.If possible, interests could also be calculated automatically using a function or a store procedure or a combination of both.</li>
-</ul>
+<table>
+	<tr>
+    	<th>Current</th>
+    	<th>Future</th>
+  	</tr>
+  	<tr>
+  		<td>the current data model consist in the structure above (pending image).</td>
+  		<td>implement more efficient queries throughout code.</td>
+  	</tr>
+  	<tr>
+  		<td></td>
+  		<td>plan to implement view to automatically structure the data that the <code>.php</code> receives.</td>
+  	</tr>
+</table>
+<table>
+  <tr>
+    <th>Outside the scope of this version:</th>
+  </tr>
+  <tr>
+    <td>If possible, interests could also be calculated automatically using a function or a store procedure or a combination of both.</td>
+  </tr>
+</table>
 <p><b>Note: </b>work is being made to structure the project stages in tables for better presentation of the progress.</p>
