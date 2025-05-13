@@ -2,6 +2,7 @@
 <p>This project consist in a simple interests calculator for compound interests. It works as a handy tool to keep track of personal finances in case borrowing is not stranger for you.</p>
 <p>It was made for my personal use and I plan to expand it base in my needs. I may later migrate it to Laravel for scalability and increased features.</p>
 <h2>Directoy Structure:</h2>
+<pre>
 Interests-Calculator/
 ├── assets/
 │   ├── css/
@@ -38,6 +39,7 @@ Interests-Calculator/
 ├── LICENSE.txt
 ├── README.md
 └── trash_bin.php
+</pre>
 <h2>Technologies:</h2>
 <ul>
   <li>PHP 8.2.12</li>
