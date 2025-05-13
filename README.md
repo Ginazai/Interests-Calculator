@@ -1,7 +1,7 @@
 <h1>Interests Calculator v.1</h1>
 <p>This project consist in a simple interests calculator for compound interests. It works as a handy tool to keep track of personal finances in case borrowing is not stranger for you.</p>
 <p>It was made for my personal use and I plan to expand it base in my needs. I may later migrate it to Laravel for scalability and increased features.</p>
-<h2>Directory Structure:</h2>
+<h2>Directory Structure</h2>
 <pre>
   Interests-Calculator/
   ├── assets/
@@ -40,7 +40,7 @@
   ├── README.md
   └── trash_bin.php
 </pre>
-<h2>Technologies:</h2>
+<h2>Technologies</h2>
 <ul>
   <li>PHP 8.2.12</li>
   <li>XAMPP (Apache + MySQL + PHP)</li>
@@ -49,17 +49,17 @@
   <li>Bootstrap 5.3.3</li>
   <li>JQuery 3.7.1</li>
 </ul>
-<h2>Installation:</h2>
+<h2>Installation</h2>
 <ol>
   <li>Clone the repository: <code>git clone https://github.com/Ginazai/Interests-Calculator.git</code></li>
    <li>Copy the folder to the directory <code>htdocs/</code> in XAMPP.</li>
    <li>Create the database in phpMyAdmin using the <code>config/model.sql</code> file.</li>
    <li><code>Start</code> Apache and MySQL from XAMPP control panel.</li>
-   <li>Access the application at <code>http://localhost/Interests-Calculator/index.html</code>.</li>
+   <li>Access the application at <code>http://localhost/Interests-Calculator/index.php</code>.</li>
 </ol>
-<h2>Use case diagram:</h2>
+<h2>Use case diagram</h2>
 [pending]
-<h2>Project State:</h2>
+<h2>Project State</h2>
 <table>
   <tr>
     <th>Current</th>
@@ -113,5 +113,5 @@
     <td>If possible, interests could also be calculated automatically using a function or a store procedure or a combination of both.</td>
   </tr>
 </table>
-<h2>Gallery:</h2>
+<h2>Gallery</h2>
 [pending]
