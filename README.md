@@ -1,44 +1,44 @@
 <h1>Interests Calculator v.1</h1>
 <p>This project consist in a simple interests calculator for compound interests. It works as a handy tool to keep track of personal finances in case borrowing is not stranger for you.</p>
 <p>It was made for my personal use and I plan to expand it base in my needs. I may later migrate it to Laravel for scalability and increased features.</p>
-<h2>Directoy Structure:</h2>
+<h2>Directory Structure:</h2>
 <pre>
-Interests-Calculator/
-├── assets/
-│   ├── css/
-│   │   └── stylesheet.css
-│   ├── images/
-│   │   ├── bg_alt_1.png
-│   │   ├── bg_alt_2.png
-│   │   ├── doodles-background.png
-│   │   ├── doodles-background-2.png
-│   │   └── patterns.png
-│   └── js/
-│       ├── ajax-unset.js
-│       ├── all_payments.js
-│       ├── script.js
-│       └── validation.js
-├── config/
-│   └── model.sql
-├── html/
-│   └── navbar
-├── php/
-│   ├── actions/
-│   │   ├── add_account.php
-│   │   ├── add_payment.php
-│   │   ├── create_csv.php
-│   │   ├── delete_account.php
-│   │   ├── delete_account_def.php
-│   │   ├── delete_payment.php
-│   │   ├── download_all_csv.php
-│   │   └── function_payment_history.php
-│   ├── connection.php
-│   └── unset.php
-├── history.php
-├── index.php
-├── LICENSE.txt
-├── README.md
-└── trash_bin.php
+  Interests-Calculator/
+  ├── assets/
+  │   ├── css/
+  │   │   └── stylesheet.css
+  │   ├── images/
+  │   │   ├── bg_alt_1.png
+  │   │   ├── bg_alt_2.png
+  │   │   ├── doodles-background.png
+  │   │   ├── doodles-background-2.png
+  │   │   └── patterns.png
+  │   └── js/
+  │       ├── ajax-unset.js
+  │       ├── all_payments.js
+  │       ├── script.js
+  │       └── validation.js
+  ├── config/
+  │   └── model.sql
+  ├── html/
+  │   └── navbar
+  ├── php/
+  │   ├── actions/
+  │   │   ├── add_account.php
+  │   │   ├── add_payment.php
+  │   │   ├── create_csv.php
+  │   │   ├── delete_account.php
+  │   │   ├── delete_account_def.php
+  │   │   ├── delete_payment.php
+  │   │   ├── download_all_csv.php
+  │   │   └── function_payment_history.php
+  │   ├── connection.php
+  │   └── unset.php
+  ├── history.php
+  ├── index.php
+  ├── LICENSE.txt
+  ├── README.md
+  └── trash_bin.php
 </pre>
 <h2>Technologies:</h2>
 <ul>
@@ -46,6 +46,8 @@ Interests-Calculator/
   <li>XAMPP (Apache + MySQL + PHP)</li>
   <li>MySQL 15.1</li>
   <li>HTML/CSS/JavaScript</li>
+  <li>Bootstrap 5.3.3</li>
+  <li>JQuery 3.7.1</li>
 </ul>
 <h2>Installation:</h2>
 <ol>
